@@ -1,2 +1,2 @@
-# parquet-regression
-Parquet regression tests.
+# Altinity Parquet Regression Tests
+
