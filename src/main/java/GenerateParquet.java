@@ -115,6 +115,7 @@ public class GenerateParquet {
             String name = field.getString("name");
             String type = field.getString("type");
 
+            //TODO ADD SUPPORT FO ALL REMAINING TYPES
             switch (type.toLowerCase()) {
                 case "uint8":
                 case "uint16":
@@ -153,6 +154,7 @@ public class GenerateParquet {
             JSONArray dataArray = field.getJSONArray("data");
             Object value = dataArray.get(rowIndex);
 
+            //TODO ADD SUPPORT FO ALL REMAINING TYPES
             if (value instanceof Integer) {
                 group.append(name, (Integer) value);
             } else if (value instanceof Long) {
