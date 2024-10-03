@@ -47,7 +47,6 @@ public class GenerateParquet {
         Path path = new Path(filePath);
         SimpleGroupFactory groupFactory = new SimpleGroupFactory(schema);
 
-        // Extracting configuration parameters from JSON
         JSONObject options = configJson.getJSONObject("options");
         String compressionCodec = options.optString("compression", "snappy").toUpperCase();
         String writerVersion = options.optString("writerVersion", "1.0");
@@ -56,7 +55,6 @@ public class GenerateParquet {
         JSONArray encodings = options.optJSONArray("encodings");
         String bloomFilterOption = configJson.optString("bloomFilter", "none");
 
-        // Building writer with optional parameters
         ExampleParquetWriter.Builder builder = ExampleParquetWriter.builder(HadoopOutputFile.fromPath(path, conf))
                 .withWriteMode(ParquetFileWriter.Mode.OVERWRITE)
                 .withCompressionCodec(CompressionCodecName.valueOf(compressionCodec))
@@ -80,7 +78,6 @@ public class GenerateParquet {
             }
         }
 
-        // Enable bloom filter for specified columns if they are specified and apply to all columns if "all" is specified.
         if ("all".equalsIgnoreCase(bloomFilterOption)) {
             builder.withBloomFilterEnabled(true);
         } else if (!"none".equalsIgnoreCase(bloomFilterOption)) {
@@ -91,8 +88,22 @@ public class GenerateParquet {
             }
         }
 
+        //FIXME NEED TO DETERMINE HOW TO HANDLE DIFFERENCE IN "DATA" ARRAY LENGTHS IN JSON FOR EACH COLUMN
+        JSONArray schemaArray = configJson.getJSONArray("schema");
+        int numRows = Integer.MAX_VALUE;
+        for (int i = 0; i < schemaArray.length(); i++) {
+            int currentLength = schemaArray.getJSONObject(i).getJSONArray("data").length();
+            if (currentLength < numRows) {
+                numRows = currentLength;
+            }
+        }
+
         try (ParquetWriter<Group> writer = builder.build()) {
-            // Write operations
+            for (int i = 0; i < numRows; i++) {
+                Group group = groupFactory.newGroup();
+                insertData(group, schemaArray, i);
+                writer.write(group);
+            }
         }
     }
 
@@ -134,5 +145,25 @@ public class GenerateParquet {
         }
 
         return builder.named("MySchema");
+    }
+    private static void insertData(Group group, JSONArray schemaArray, int rowIndex) {
+        for (int i = 0; i < schemaArray.length(); i++) {
+            JSONObject field = schemaArray.getJSONObject(i);
+            String name = field.getString("name");
+            JSONArray dataArray = field.getJSONArray("data");
+            Object value = dataArray.get(rowIndex);
+
+            if (value instanceof Integer) {
+                group.append(name, (Integer) value);
+            } else if (value instanceof Long) {
+                group.append(name, (Long) value);
+            } else if (value instanceof String) {
+                group.append(name, (String) value);
+            } else if (value instanceof Boolean) {
+                group.append(name, (Boolean) value);
+            } else {
+                throw new IllegalArgumentException("Unsupported data type: " + value.getClass().getName());
+            }
+        }
     }
 }

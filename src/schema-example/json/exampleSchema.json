@@ -12,19 +12,23 @@
   "schema": [
     {
       "name": "age",
-      "type": "uint8"
+      "type": "uint8",
+      "data": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     },
     {
       "name": "name",
-      "type": "string"
+      "type": "string",
+      "data": ["Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Hank", "Ivy", "Jack"]
     },
     {
       "name": "city",
-      "type": "string"
+      "type": "string",
+      "data": ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose"]
     },
     {
       "name": "state",
-      "type": "int64"
+      "type": "string",
+      "data": ["NY", "CA", "IL", "TX", "AZ", "PA", "TX", "CA", "TX", "CA"]
     }
   ]
 }
