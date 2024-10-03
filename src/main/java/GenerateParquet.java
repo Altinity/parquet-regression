@@ -39,22 +39,22 @@ public class GenerateParquet {
     }
 
     private static void writeParquetFile(JSONObject configJson, String filePath) throws IOException {
-        String outputFilePath = configJson.getString("fileName");
         MessageType schema = buildSchema(configJson.getJSONArray("schema"));
 
         Configuration conf = new Configuration();
         GroupWriteSupport.setSchema(schema, conf);
 
-        Path path = new Path(outputFilePath);
+        Path path = new Path(filePath);
         SimpleGroupFactory groupFactory = new SimpleGroupFactory(schema);
 
         // Extracting configuration parameters from JSON
-        String compressionCodec = configJson.optString("compression", "snappy").toUpperCase();
-        String writerVersion = configJson.optString("writerVersion", "1.0");
-        String rowGroupSize = configJson.optString("rowGroupSize", "default");
-        String pageSize = configJson.optString("pageSize", "default");
-        JSONArray encodings = configJson.optJSONArray("encodings");
-        boolean bloomFilter = configJson.optBoolean("bloomFilter", false);
+        JSONObject options = configJson.getJSONObject("options");
+        String compressionCodec = options.optString("compression", "snappy").toUpperCase();
+        String writerVersion = options.optString("writerVersion", "1.0");
+        String rowGroupSize = options.optString("rowGroupSize", "default");
+        String pageSize = options.optString("pageSize", "default");
+        JSONArray encodings = options.optJSONArray("encodings");
+        String bloomFilterOption = configJson.optString("bloomFilter", "none");
 
         // Building writer with optional parameters
         ExampleParquetWriter.Builder builder = ExampleParquetWriter.builder(HadoopOutputFile.fromPath(path, conf))
@@ -80,8 +80,15 @@ public class GenerateParquet {
             }
         }
 
-        if (bloomFilter) {
+        // Enable bloom filter for specified columns if they are specified and apply to all columns if "all" is specified.
+        if ("all".equalsIgnoreCase(bloomFilterOption)) {
             builder.withBloomFilterEnabled(true);
+        } else if (!"none".equalsIgnoreCase(bloomFilterOption)) {
+            JSONArray bloomFilterColumns = configJson.getJSONArray("bloomFilter");
+            for (int i = 0; i < bloomFilterColumns.length(); i++) {
+                String column = bloomFilterColumns.getString(i);
+                builder.withBloomFilterEnabled(column, true);
+            }
         }
 
         try (ParquetWriter<Group> writer = builder.build()) {
@@ -102,9 +109,9 @@ public class GenerateParquet {
                 case "uint16":
                 case "uint32":
                 case "uint64":
-                    int UintBitWidth = Integer.parseInt(type.substring(4));
-                    builder.required(PrimitiveType.PrimitiveTypeName.INT32)
-                            .as(LogicalTypeAnnotation.intType(UintBitWidth, false))
+                    int uintBitWidth = Integer.parseInt(type.substring(4));
+                    builder.required(uintBitWidth == 64 ? PrimitiveType.PrimitiveTypeName.INT64 : PrimitiveType.PrimitiveTypeName.INT32)
+                            .as(LogicalTypeAnnotation.intType(uintBitWidth, false))
                             .named(name);
                     break;
                 case "int8":
@@ -112,8 +119,8 @@ public class GenerateParquet {
                 case "int32":
                 case "int64":
                     int intBitWidth = Integer.parseInt(type.substring(3));
-                    builder.required(PrimitiveType.PrimitiveTypeName.INT32)
-                            .as(LogicalTypeAnnotation.intType(intBitWidth, false))
+                    builder.required(intBitWidth == 64 ? PrimitiveType.PrimitiveTypeName.INT64 : PrimitiveType.PrimitiveTypeName.INT32)
+                            .as(LogicalTypeAnnotation.intType(intBitWidth))
                             .named(name);
                     break;
                 case "string":

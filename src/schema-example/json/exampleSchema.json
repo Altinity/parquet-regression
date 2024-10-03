@@ -1,12 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title:": "JSON Schema for Altinity Parquet Regression",
-  "writerVersion": "1.0",
-  "fileName": "exampleSchema.parquet",
-  "compression": "snappy",
-  "rowGroupSize": "default",
-  "pageSize": "default",
-  "encodings": ["DICTIONARY", "BYTE_STREAM_SPLIT"],
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "snappy",
+    "rowGroupSize": "default",
+    "pageSize": "default",
+    "encodings": ["DICTIONARY", "BYTE_STREAM_SPLIT"],
+    "bloomFilter": "all"
+  },
   "schema": [
     {
       "name": "age",
@@ -19,6 +21,10 @@
     {
       "name": "city",
       "type": "string"
+    },
+    {
+      "name": "state",
+      "type": "int64"
     }
   ]
 }
