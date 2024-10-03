@@ -1,3 +1,4 @@
+import org.apache.commons.cli.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.column.ParquetProperties;
@@ -21,17 +22,34 @@ import org.json.JSONArray;
 public class GenerateParquet {
 
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.err.println("Usage: java GenerateParquet <config-json-file> <output-path>");
+        Options options = new Options();
+
+        Option configFilePath = new Option("j", "json", true, "Path to the JSON file");
+        configFilePath.setRequired(true);
+        options.addOption(configFilePath);
+
+        Option outputPath = new Option("o", "output", true, "Output path for the Parquet file");
+        outputPath.setRequired(true);
+        options.addOption(outputPath);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd;
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+            formatter.printHelp("GenerateParquet", options);
             System.exit(1);
+            return;
         }
 
-        String configFilePath = args[0];
-        String outputPath = args[1];
+
         try {
-            String content = new String(Files.readAllBytes(Paths.get(configFilePath)));
+            String content = new String(Files.readAllBytes(Paths.get(cmd.getOptionValue("json"))));
             JSONObject configJson = new JSONObject(content);
-            writeParquetFile(configJson, outputPath);
+            writeParquetFile(configJson, cmd.getOptionValue("output"));
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -88,7 +106,6 @@ public class GenerateParquet {
             }
         }
 
-        //FIXME NEED TO DETERMINE HOW TO HANDLE DIFFERENCE IN "DATA" ARRAY LENGTHS IN JSON FOR EACH COLUMN
         JSONArray schemaArray = configJson.getJSONArray("schema");
         int numRows = Integer.MAX_VALUE;
         for (int i = 0; i < schemaArray.length(); i++) {
@@ -115,7 +132,6 @@ public class GenerateParquet {
             String name = field.getString("name");
             String type = field.getString("type");
 
-            //TODO ADD SUPPORT FO ALL REMAINING TYPES
             switch (type.toLowerCase()) {
                 case "uint8":
                 case "uint16":
@@ -147,6 +163,7 @@ public class GenerateParquet {
 
         return builder.named("MySchema");
     }
+
     private static void insertData(Group group, JSONArray schemaArray, int rowIndex) {
         for (int i = 0; i < schemaArray.length(); i++) {
             JSONObject field = schemaArray.getJSONObject(i);
@@ -154,7 +171,6 @@ public class GenerateParquet {
             JSONArray dataArray = field.getJSONArray("data");
             Object value = dataArray.get(rowIndex);
 
-            //TODO ADD SUPPORT FO ALL REMAINING TYPES
             if (value instanceof Integer) {
                 group.append(name, (Integer) value);
             } else if (value instanceof Long) {
