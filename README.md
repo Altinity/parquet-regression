@@ -38,7 +38,7 @@ apt install maven
 mvn clean package
 ```
 
-5. Navigate to the generated `target` directory and run the following command to generate the parquet files
+5. Navigate to the newly created `target` directory and run the following command to generate the parquet files
 
 ```shell
 java -jar parquet-generator.jar --json ../src/schema-example/json/exampleSchema.json --output test.parquet
