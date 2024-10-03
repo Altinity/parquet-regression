@@ -13,12 +13,21 @@ import org.apache.parquet.schema.*;
 
 import java.io.IOException;
 
-public class CreateParquetFile {
+public class CreateParquetFileExample {
+
+    public static void main(String[] args){
+        String outputFilePath = "/home/david/parquet/parquet-try-3/example_integer.parquet";
+        try {
+            writeParquetFileWithAllIntegers(outputFilePath, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
 
     private static void writeParquetFile(String outputFilePath, MessageType schema, DataInserter dataInserter, Boolean bloomFilter) throws IOException {
         Configuration conf = new Configuration();
         GroupWriteSupport.setSchema(schema, conf);
-
         Path path = new Path(outputFilePath);
         SimpleGroupFactory groupFactory = new SimpleGroupFactory(schema);
 
