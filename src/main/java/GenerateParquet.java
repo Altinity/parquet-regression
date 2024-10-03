@@ -12,16 +12,33 @@ import org.apache.parquet.hadoop.util.HadoopOutputFile;
 import org.apache.parquet.schema.*;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-
 public class GenerateParquet {
 
-    private static void writeParquetFile(JSONObject configJson) throws IOException {
+    public static void main(String[] args) {
+        if (args.length != 2) {
+            System.err.println("Usage: java GenerateParquet <config-json-file> <output-path>");
+            System.exit(1);
+        }
+
+        String configFilePath = args[0];
+        String outputPath = args[1];
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(configFilePath)));
+            JSONObject configJson = new JSONObject(content);
+            writeParquetFile(configJson, outputPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    private static void writeParquetFile(JSONObject configJson, String filePath) throws IOException {
         String outputFilePath = configJson.getString("fileName");
         MessageType schema = buildSchema(configJson.getJSONArray("schema"));
 
@@ -68,6 +85,7 @@ public class GenerateParquet {
         }
 
         try (ParquetWriter<Group> writer = builder.build()) {
+            // Write operations
         }
     }
 
