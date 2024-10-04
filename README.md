@@ -23,13 +23,13 @@ git clone https://github.com/Altinity/parquet-regression.git
 2. Install `java 11`
 
 ```shell
-apt install openjdk-11-jre-headless
+sudo apt install openjdk-11-jre-headless
 ```
 
 3. Install `maven`
 
 ```shell
-apt install maven
+sudo apt install maven
 ```
 
 4. From the root directory of the project, run the following command to build the project
