@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+
+echo "Build parquet-generator-builder Docker image"
+docker build -t parquet-generator-builder docker/.
+
+echo "Build parquet-generator"
+docker run -it \
+    -v .:/opt/parquet-regression \
+    -v ./.m2:/root/.m2 \
+    parquet-generator-builder
