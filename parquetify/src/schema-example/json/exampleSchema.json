@@ -20,6 +20,7 @@
       "name": "test1",
       "schemaType": "required",
       "physicalType": "FIXED_LEN_BYTE_ARRAY",
+      "length": 2,
       "logicalType": "FLOAT16",
       "data": [1.0, 2.5, 3.75, 4.125, 5.5]
     },

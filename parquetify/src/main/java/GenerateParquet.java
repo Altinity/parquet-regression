@@ -149,13 +149,14 @@ public class GenerateParquet {
       String schemaType = field.getString("schemaType");
       String physicalType = field.optString("physicalType", null);
       String logicalType = field.optString("logicalType", "NONE");
+      int length = field.optInt("length", 0);
 
       Types.Builder<?, ?> columnBuilder;
       if (physicalType == null) {
         columnBuilder = addGroupSchemaType(builder, schemaType, field.getJSONArray("fields"));
       } else {
-        columnBuilder = addSchemaType(builder, schemaType, physicalType);
-        addLogicalType(columnBuilder, logicalType);
+        columnBuilder = addSchemaType(builder, schemaType, physicalType, length);
+        addLogicalType(columnBuilder, logicalType, physicalType, length);
       }
 
       columnBuilder.named(name);
@@ -185,13 +186,14 @@ public class GenerateParquet {
       String fieldSchemaType = field.getString("schemaType");
       String fieldPhysicalType = field.optString("physicalType", null);
       String fieldLogicalType = field.optString("logicalType", "NONE");
+      int length = field.optInt("length", 0);
 
       Types.Builder<?, ?> fieldBuilder;
       if (fieldPhysicalType == null) {
         fieldBuilder = addGroupSchemaType(groupBuilder, fieldSchemaType, field.getJSONArray("fields"));
       } else {
-        fieldBuilder = addSchemaType(groupBuilder, fieldSchemaType, fieldPhysicalType);
-        addLogicalType(fieldBuilder, fieldLogicalType);
+        fieldBuilder = addSchemaType(groupBuilder, fieldSchemaType, fieldPhysicalType, length);
+        addLogicalType(fieldBuilder, fieldLogicalType, fieldPhysicalType, length);
       }
 
       fieldBuilder.named(name);
@@ -199,21 +201,39 @@ public class GenerateParquet {
     return groupBuilder;
   }
 
-  private static Types.Builder<?, ?> addSchemaType(Types.GroupBuilder<?> builder, String schemaType, String physicalType) {
+  private static Types.Builder<?, ?> addSchemaType(Types.GroupBuilder<?> builder, String schemaType, String physicalType, int length) {
     PrimitiveType.PrimitiveTypeName primitiveType = PrimitiveType.PrimitiveTypeName.valueOf(physicalType);
-    switch (schemaType) {
-      case "optional":
-        return builder.optional(primitiveType);
-      case "required":
-        return builder.required(primitiveType);
-      case "repeated":
-        return builder.repeated(primitiveType);
+
+    switch (primitiveType) {
+      case FIXED_LEN_BYTE_ARRAY:
+        if (length <= 0) {
+          throw new IllegalArgumentException("Invalid FIXED_LEN_BYTE_ARRAY length: " + length);
+        }
+        switch (schemaType) {
+          case "optional":
+            return builder.optional(primitiveType).length(length);
+          case "required":
+            return builder.required(primitiveType).length(length);
+          case "repeated":
+            return builder.repeated(primitiveType).length(length);
+          default:
+            throw new IllegalArgumentException("Unsupported schema type: " + schemaType);
+        }
       default:
-        throw new IllegalArgumentException("Unsupported schema type: " + schemaType);
+        switch (schemaType) {
+          case "optional":
+            return builder.optional(primitiveType);
+          case "required":
+            return builder.required(primitiveType);
+          case "repeated":
+            return builder.repeated(primitiveType);
+          default:
+            throw new IllegalArgumentException("Unsupported schema type: " + schemaType);
+        }
     }
   }
 
-  private static void addLogicalType(Types.Builder<?, ?> columnBuilder, String logicalType) {
+  private static void addLogicalType(Types.Builder<?, ?> columnBuilder, String logicalType, String physicalType, int length) {
     switch (logicalType.toUpperCase()) {
       case "MAP":
         columnBuilder.as(LogicalTypeAnnotation.mapType());
@@ -274,7 +294,9 @@ public class GenerateParquet {
         columnBuilder.as(LogicalTypeAnnotation.intervalType());
         break;
       case "FLOAT16":
-        // Parquet does not support FLOAT16 directly, use FLOAT or DOUBLE instead
+        if (!physicalType.equals("FIXED_LEN_BYTE_ARRAY") || length != 2) {
+          throw new IllegalArgumentException("FLOAT16 can only annotate FIXED_LEN_BYTE_ARRAY with length 2");
+        }
         columnBuilder.as(LogicalTypeAnnotation.float16Type());
         break;
       case "JSON":
