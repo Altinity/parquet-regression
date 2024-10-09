@@ -201,7 +201,6 @@ public class GenerateParquet {
 
   private static Types.Builder<?, ?> addSchemaType(Types.GroupBuilder<?> builder, String schemaType, String physicalType) {
     PrimitiveType.PrimitiveTypeName primitiveType = PrimitiveType.PrimitiveTypeName.valueOf(physicalType);
-
     switch (schemaType) {
       case "optional":
         return builder.optional(primitiveType);
@@ -216,31 +215,70 @@ public class GenerateParquet {
 
   private static void addLogicalType(Types.Builder<?, ?> columnBuilder, String logicalType) {
     switch (logicalType.toUpperCase()) {
-      case "UTF8":
+      case "MAP":
+        columnBuilder.as(LogicalTypeAnnotation.mapType());
+        break;
+      case "LIST":
+        columnBuilder.as(LogicalTypeAnnotation.listType());
+        break;
       case "STRING":
+      case "UTF8":
         columnBuilder.as(LogicalTypeAnnotation.stringType());
         break;
+      case "MAP_KEY_VALUE":
+        columnBuilder.as(LogicalTypeAnnotation.mapType());
+        break;
+      case "ENUM":
+        columnBuilder.as(LogicalTypeAnnotation.enumType());
+        break;
       case "DECIMAL":
-        // You can adjust precision and scale as per requirements.
         columnBuilder.as(LogicalTypeAnnotation.decimalType(10, 2));
         break;
       case "DATE":
         columnBuilder.as(LogicalTypeAnnotation.dateType());
         break;
+      case "TIME":
       case "TIME_MILLIS":
         columnBuilder.as(LogicalTypeAnnotation.timeType(true, LogicalTypeAnnotation.TimeUnit.MILLIS));
         break;
       case "TIME_MICROS":
         columnBuilder.as(LogicalTypeAnnotation.timeType(true, LogicalTypeAnnotation.TimeUnit.MICROS));
         break;
+      case "TIMESTAMP":
       case "TIMESTAMP_MILLIS":
         columnBuilder.as(LogicalTypeAnnotation.timestampType(true, LogicalTypeAnnotation.TimeUnit.MILLIS));
         break;
       case "TIMESTAMP_MICROS":
         columnBuilder.as(LogicalTypeAnnotation.timestampType(true, LogicalTypeAnnotation.TimeUnit.MICROS));
         break;
+      case "INTEGER":
+      case "INT_8":
+      case "INT_16":
+      case "INT_32":
+      case "INT_64":
+        columnBuilder.as(LogicalTypeAnnotation.intType(32, true));
+        break;
+      case "UINT_8":
+      case "UINT_16":
+      case "UINT_32":
+      case "UINT_64":
+        columnBuilder.as(LogicalTypeAnnotation.intType(32, false));
+        break;
+      case "BSON":
+        columnBuilder.as(LogicalTypeAnnotation.bsonType());
+        break;
       case "UUID":
         columnBuilder.as(LogicalTypeAnnotation.uuidType());
+        break;
+      case "INTERVAL":
+        columnBuilder.as(LogicalTypeAnnotation.intervalType());
+        break;
+      case "FLOAT16":
+        // Parquet does not support FLOAT16 directly, use FLOAT or DOUBLE instead
+        columnBuilder.as(LogicalTypeAnnotation.float16Type());
+        break;
+      case "JSON":
+        columnBuilder.as(LogicalTypeAnnotation.jsonType());
         break;
       case "NONE":
         // No logical type

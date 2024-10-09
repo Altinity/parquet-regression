@@ -17,6 +17,13 @@
       "data": [1, 2, 3, 4, 5]
     },
     {
+      "name": "test1",
+      "schemaType": "required",
+      "physicalType": "FIXED_LEN_BYTE_ARRAY",
+      "logicalType": "FLOAT16",
+      "data": [1.0, 2.5, 3.75, 4.125, 5.5]
+    },
+    {
       "name": "name",
       "schemaType": "optional",
       "physicalType": "BINARY",
