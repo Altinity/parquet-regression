@@ -29,7 +29,45 @@
       "physicalType": "DOUBLE",
       "logicalType": "NONE",
       "data": [1000.0, 2000.0, 3000.0, 4000.0, 5000.0]
+    },
+    {
+      "name": "person",
+      "schemaType": "requiredGroup",
+      "fields": [
+        {
+          "name": "name",
+          "schemaType": "optional",
+          "physicalType": "BINARY",
+          "logicalType": "STRING"
+        },
+        {
+          "name": "age",
+          "schemaType": "required",
+          "physicalType": "INT32"
+        }
+      ],
+      "data": [
+        {
+          "name": "Alice",
+          "age": 30
+        },
+        {
+          "name": "Bob",
+          "age": 25
+        },
+        {
+          "name": "Charlie",
+          "age": 40
+        },
+        {
+          "name": "David",
+          "age": 35
+        },
+        {
+          "name": "Eve",
+          "age": 28
+        }
+      ]
     }
-
   ]
 }

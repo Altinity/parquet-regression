@@ -147,17 +147,59 @@ public class GenerateParquet {
       JSONObject field = schemaArray.getJSONObject(i);
       String name = field.getString("name");
       String schemaType = field.getString("schemaType");
-      String physicalType = field.getString("physicalType");
+      String physicalType = field.optString("physicalType", null);
       String logicalType = field.optString("logicalType", "NONE");
 
-      Types.Builder<?, ?> columnBuilder = addSchemaType(builder, schemaType, physicalType);
-      addLogicalType(columnBuilder, logicalType);
+      Types.Builder<?, ?> columnBuilder;
+      if (physicalType == null) {
+        columnBuilder = addGroupSchemaType(builder, schemaType, field.getJSONArray("fields"));
+      } else {
+        columnBuilder = addSchemaType(builder, schemaType, physicalType);
+        addLogicalType(columnBuilder, logicalType);
+      }
+
       columnBuilder.named(name);
     }
     return builder.named("MySchema");
   }
 
-  private static Types.Builder<?, ?> addSchemaType(Types.MessageTypeBuilder builder, String schemaType, String physicalType) {
+  private static Types.Builder<?, ?> addGroupSchemaType(Types.GroupBuilder<?> builder, String schemaType, JSONArray fields) {
+    Types.GroupBuilder<?> groupBuilder;
+    switch (schemaType) {
+      case "optionalGroup":
+        groupBuilder = builder.optionalGroup();
+        break;
+      case "requiredGroup":
+        groupBuilder = builder.requiredGroup();
+        break;
+      case "repeatedGroup":
+        groupBuilder = builder.repeatedGroup();
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported schema type for group: " + schemaType);
+    }
+
+    for (int i = 0; i < fields.length(); i++) {
+      JSONObject field = fields.getJSONObject(i);
+      String name = field.getString("name");
+      String fieldSchemaType = field.getString("schemaType");
+      String fieldPhysicalType = field.optString("physicalType", null);
+      String fieldLogicalType = field.optString("logicalType", "NONE");
+
+      Types.Builder<?, ?> fieldBuilder;
+      if (fieldPhysicalType == null) {
+        fieldBuilder = addGroupSchemaType(groupBuilder, fieldSchemaType, field.getJSONArray("fields"));
+      } else {
+        fieldBuilder = addSchemaType(groupBuilder, fieldSchemaType, fieldPhysicalType);
+        addLogicalType(fieldBuilder, fieldLogicalType);
+      }
+
+      fieldBuilder.named(name);
+    }
+    return groupBuilder;
+  }
+
+  private static Types.Builder<?, ?> addSchemaType(Types.GroupBuilder<?> builder, String schemaType, String physicalType) {
     PrimitiveType.PrimitiveTypeName primitiveType = PrimitiveType.PrimitiveTypeName.valueOf(physicalType);
 
     switch (schemaType) {
@@ -167,12 +209,6 @@ public class GenerateParquet {
         return builder.required(primitiveType);
       case "repeated":
         return builder.repeated(primitiveType);
-      case "optionalGroup":
-        return builder.optionalGroup();
-      case "requiredGroup":
-        return builder.requiredGroup();
-      case "repeatedGroup":
-        return builder.repeatedGroup();
       default:
         throw new IllegalArgumentException("Unsupported schema type: " + schemaType);
     }
@@ -228,8 +264,8 @@ public class GenerateParquet {
   private static int calculateNumRows(JSONArray schemaArray) {
     int numRows = Integer.MAX_VALUE;
     for (int i = 0; i < schemaArray.length(); i++) {
-      int currentLength = schemaArray.getJSONObject(i).getJSONArray("data").length();
-      if (currentLength < numRows) {
+      int currentLength = schemaArray.getJSONObject(i).optJSONArray("data") != null ? schemaArray.getJSONObject(i).getJSONArray("data").length() : 0;
+      if (currentLength > 0 && currentLength < numRows) {
         numRows = currentLength;
       }
     }
@@ -239,10 +275,25 @@ public class GenerateParquet {
   private static void insertDataIntoGroup(Group group, JSONArray schemaArray, int rowIndex) {
     for (int i = 0; i < schemaArray.length(); i++) {
       JSONObject field = schemaArray.getJSONObject(i);
-      String name = field.getString("name");
-      JSONArray dataArray = field.getJSONArray("data");
-      Object value = dataArray.get(rowIndex);
-      appendValueToGroup(group, name, value);
+      if (!field.has("data")) {
+        // Handle nested groups
+        String name = field.getString("name");
+        Group nestedGroup = group.addGroup(name);
+        JSONArray groupDataArray = field.getJSONArray("data");
+        JSONObject groupData = groupDataArray.getJSONObject(rowIndex);
+        JSONArray fields = field.getJSONArray("fields");
+        for (int j = 0; j < fields.length(); j++) {
+          JSONObject nestedField = fields.getJSONObject(j);
+          String nestedFieldName = nestedField.getString("name");
+          Object nestedValue = groupData.get(nestedFieldName);
+          appendValueToGroup(nestedGroup, nestedFieldName, nestedValue);
+        }
+      } else {
+        String name = field.getString("name");
+        JSONArray dataArray = field.getJSONArray("data");
+        Object value = dataArray.get(rowIndex);
+        appendValueToGroup(group, name, value);
+      }
     }
   }
 
@@ -258,8 +309,19 @@ public class GenerateParquet {
         group.add(name, (Boolean) value);
       } else if (value instanceof Double) {
         group.add(name, (Double) value);
+      } else if (value instanceof Float) {
+        group.add(name, (Float) value);
       } else if (value instanceof BigDecimal) {
-        group.add(name, (Double) ((BigDecimal) value).doubleValue());
+        group.add(name, ((BigDecimal) value).doubleValue());
+      } else if (value instanceof byte[]) {
+        group.add(name, org.apache.parquet.io.api.Binary.fromConstantByteArray((byte[]) value));
+      } else if (value instanceof JSONObject) {
+        Group nestedGroup = group.addGroup(name);
+        JSONObject jsonObject = (JSONObject) value;
+        for (String key : jsonObject.keySet()) {
+          Object nestedValue = jsonObject.get(key);
+          appendValueToGroup(nestedGroup, key, nestedValue);
+        }
       } else {
         throw new IllegalArgumentException("Unsupported data type: " + value.getClass().getName());
       }
