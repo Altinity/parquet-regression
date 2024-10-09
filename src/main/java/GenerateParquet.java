@@ -1,12 +1,15 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
+
 import org.apache.commons.cli.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroupFactory;
+import org.apache.parquet.format.LogicalType;
 import org.apache.parquet.hadoop.ParquetFileWriter;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.example.ExampleParquetWriter;
@@ -131,35 +134,71 @@ public class GenerateParquet {
     for (int i = 0; i < schemaArray.length(); i++) {
       JSONObject field = schemaArray.getJSONObject(i);
       String name = field.getString("name");
-      String type = field.getString("type");
-      addFieldToSchema(builder, name, type);
+      String schemaType = field.getString("schemaType");
+      String physicalType = field.getString("physicalType");
+      String logicalType = field.optString("logicalType", "NONE");
+
+      Types.Builder<?, ?> columnBuilder = addSchemaType(builder, schemaType, physicalType);
+      addLogicalType(columnBuilder, logicalType);
+      columnBuilder.named(name);
     }
     return builder.named("MySchema");
   }
 
-  private static void addFieldToSchema(Types.MessageTypeBuilder builder, String name, String type) {
-    switch (type.toLowerCase()) {
-      case "uint8":
-      case "uint16":
-      case "uint32":
-      case "uint64":
-        int uintBitWidth = Integer.parseInt(type.substring(4));
-        builder.required(uintBitWidth == 64 ? PrimitiveType.PrimitiveTypeName.INT64 : PrimitiveType.PrimitiveTypeName.INT32)
-                .as(LogicalTypeAnnotation.intType(uintBitWidth, false)).named(name);
+  private static Types.Builder<?, ?> addSchemaType(Types.MessageTypeBuilder builder, String schemaType, String physicalType) {
+    PrimitiveType.PrimitiveTypeName primitiveType = PrimitiveType.PrimitiveTypeName.valueOf(physicalType);
+
+    switch (schemaType) {
+      case "optional":
+        return builder.optional(primitiveType);
+      case "required":
+        return builder.required(primitiveType);
+      case "repeated":
+        return builder.repeated(primitiveType);
+      case "optionalGroup":
+        return builder.optionalGroup();
+      case "requiredGroup":
+        return builder.requiredGroup();
+      case "repeatedGroup":
+        return builder.repeatedGroup();
+      default:
+        throw new IllegalArgumentException("Unsupported schema type: " + schemaType);
+    }
+  }
+
+  private static void addLogicalType(Types.Builder<?, ?> columnBuilder, String logicalType) {
+    switch (logicalType) {
+      case "UTF8":
+      case "STRING":
+        columnBuilder.as(LogicalTypeAnnotation.stringType());
         break;
-      case "int8":
-      case "int16":
-      case "int32":
-      case "int64":
-        int intBitWidth = Integer.parseInt(type.substring(3));
-        builder.required(intBitWidth == 64 ? PrimitiveType.PrimitiveTypeName.INT64 : PrimitiveType.PrimitiveTypeName.INT32)
-                .as(LogicalTypeAnnotation.intType(intBitWidth)).named(name);
+      case "DECIMAL":
+        // You can adjust precision and scale as per requirements.
+        columnBuilder.as(LogicalTypeAnnotation.decimalType(10, 2));
         break;
-      case "string":
-        builder.required(PrimitiveType.PrimitiveTypeName.BINARY).as(LogicalTypeAnnotation.stringType()).named(name);
+      case "DATE":
+        columnBuilder.as(LogicalTypeAnnotation.dateType());
+        break;
+      case "TIME_MILLIS":
+        columnBuilder.as(LogicalTypeAnnotation.timeType(true, LogicalTypeAnnotation.TimeUnit.MILLIS));
+        break;
+      case "TIME_MICROS":
+        columnBuilder.as(LogicalTypeAnnotation.timeType(true, LogicalTypeAnnotation.TimeUnit.MICROS));
+        break;
+      case "TIMESTAMP_MILLIS":
+        columnBuilder.as(LogicalTypeAnnotation.timestampType(true, LogicalTypeAnnotation.TimeUnit.MILLIS));
+        break;
+      case "TIMESTAMP_MICROS":
+        columnBuilder.as(LogicalTypeAnnotation.timestampType(true, LogicalTypeAnnotation.TimeUnit.MICROS));
+        break;
+      case "UUID":
+        columnBuilder.as(LogicalTypeAnnotation.uuidType());
+        break;
+      case "NONE":
+        // No logical type
         break;
       default:
-        throw new IllegalArgumentException("Unsupported type: " + type);
+        throw new IllegalArgumentException("Unsupported logical type: " + logicalType);
     }
   }
 
