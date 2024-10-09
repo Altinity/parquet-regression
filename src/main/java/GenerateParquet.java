@@ -1,6 +1,8 @@
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Objects;
 
 import org.apache.commons.cli.*;
@@ -60,16 +62,26 @@ public class GenerateParquet {
   }
 
   private static void generateParquet(JSONObject configJson, String filePath) {
+    ParquetWriter<Group> writer = null;
     try {
       MessageType schema = buildSchema(configJson.getJSONArray("schema"));
       Configuration conf = new Configuration();
       GroupWriteSupport.setSchema(schema, conf);
       SimpleGroupFactory groupFactory = new SimpleGroupFactory(schema);
-      ParquetWriter<Group> writer = createParquetWriter(filePath, conf, configJson.getJSONObject("options"));
+      writer = createParquetWriter(filePath, conf, configJson.getJSONObject("options"));
       writeData(writer, groupFactory, configJson.getJSONArray("schema"));
     } catch (IOException e) {
       System.err.println("Error generating Parquet file: " + e.getMessage());
       e.printStackTrace();
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException e) {
+          System.err.println("Error closing Parquet writer: " + e.getMessage());
+          e.printStackTrace();
+        }
+      }
     }
   }
 
@@ -77,16 +89,16 @@ public class GenerateParquet {
     Path path = new Path(filePath);
     String compressionCodec = options.optString("compression", "SNAPPY").toUpperCase();
     String writerVersion = options.optString("writerVersion", "1.0");
-    String rowGroupSize = options.optString("rowGroupSize", "default");
-    String pageSize = options.optString("pageSize", "default");
+    int rowGroupSize = options.optInt("rowGroupSize", 128 * 1024 * 1024);
+    int pageSize = options.optInt("pageSize", 1024 * 1024);
     JSONArray encodings = options.optJSONArray("encodings");
     String bloomFilterOption = options.optString("bloomFilter", "none");
 
     ExampleParquetWriter.Builder builder = ExampleParquetWriter.builder(HadoopOutputFile.fromPath(path, conf))
             .withWriteMode(ParquetFileWriter.Mode.OVERWRITE)
             .withCompressionCodec(CompressionCodecName.valueOf(compressionCodec))
-            .withRowGroupSize(rowGroupSize.equals("default") ? ParquetWriter.DEFAULT_BLOCK_SIZE : Integer.parseInt(rowGroupSize))
-            .withPageSize(pageSize.equals("default") ? ParquetWriter.DEFAULT_PAGE_SIZE : Integer.parseInt(pageSize))
+            .withRowGroupSize(rowGroupSize)
+            .withPageSize(pageSize)
             .withValidation(ParquetWriter.DEFAULT_IS_VALIDATING_ENABLED)
             .withWriterVersion(writerVersion.equals("1.0") ? ParquetProperties.WriterVersion.PARQUET_1_0 : ParquetProperties.WriterVersion.PARQUET_2_0)
             .withConf(conf);
@@ -167,7 +179,7 @@ public class GenerateParquet {
   }
 
   private static void addLogicalType(Types.Builder<?, ?> columnBuilder, String logicalType) {
-    switch (logicalType) {
+    switch (logicalType.toUpperCase()) {
       case "UTF8":
       case "STRING":
         columnBuilder.as(LogicalTypeAnnotation.stringType());
@@ -204,9 +216,11 @@ public class GenerateParquet {
 
   private static void writeData(ParquetWriter<Group> writer, SimpleGroupFactory groupFactory, JSONArray schemaArray) throws IOException {
     int numRows = calculateNumRows(schemaArray);
+    System.out.println("Number of rows to write: " + numRows); // Logging number of rows to write
     for (int i = 0; i < numRows; i++) {
       Group group = groupFactory.newGroup();
       insertDataIntoGroup(group, schemaArray, i);
+      System.out.println("Writing row " + (i + 1)); // Logging each row being written
       writer.write(group);
     }
   }
@@ -233,16 +247,24 @@ public class GenerateParquet {
   }
 
   private static void appendValueToGroup(Group group, String name, Object value) {
-    if (value instanceof Integer) {
-      group.append(name, (Integer) value);
-    } else if (value instanceof Long) {
-      group.append(name, (Long) value);
-    } else if (value instanceof String) {
-      group.append(name, (String) value);
-    } else if (value instanceof Boolean) {
-      group.append(name, (Boolean) value);
-    } else {
-      throw new IllegalArgumentException("Unsupported data type: " + value.getClass().getName());
+    try {
+      if (value instanceof Integer) {
+        group.add(name, (Integer) value);
+      } else if (value instanceof Long) {
+        group.add(name, (Long) value);
+      } else if (value instanceof String) {
+        group.add(name, (String) value);
+      } else if (value instanceof Boolean) {
+        group.add(name, (Boolean) value);
+      } else if (value instanceof Double) {
+        group.add(name, (Double) value);
+      } else if (value instanceof BigDecimal) {
+        group.add(name, (Double) ((BigDecimal) value).doubleValue());
+      } else {
+        throw new IllegalArgumentException("Unsupported data type: " + value.getClass().getName());
+      }
+    } catch (ClassCastException e) {
+      throw new IllegalArgumentException("Error adding value to group. Value type mismatch for column: " + name, e);
     }
   }
 }

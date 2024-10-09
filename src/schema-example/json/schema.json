@@ -8,6 +8,51 @@
       "description": "Name of the output Parquet file.",
       "type": "string"
     },
+    "options": {
+        "description": "Additional options for the Parquet writer.",
+        "type": "object",
+        "properties": {
+            "writerVersion": {
+              "description": "Parquet writer version to use.",
+              "type": "string",
+              "enum": ["1.0", "2.0"],
+              "default": "1.0"
+            },
+            "compression": {
+              "description": "Compression codec to use for the Parquet file.",
+              "type": "string",
+              "enum": ["NONE", "SNAPPY", "GZIP", "LZO", "BROTLI", "LZ4", "ZSTD"],
+              "default": "SNAPPY"
+            },
+            "rowGroupSize": {
+              "description": "Size of row groups in bytes.",
+              "type": "integer",
+              "default": 134217728
+            },
+            "pageSize": {
+              "description": "Size of pages in bytes.",
+              "type": "integer",
+              "default": 1048576
+            },
+            "encodings": {
+              "description": "List of encodings to use for columns.",
+              "type": "array",
+              "items": {
+                  "type": "string",
+                  "enum": ["PLAIN", "RLE", "BIT_PACKED", "DELTA_BINARY_PACKED", "DELTA_LENGTH_BYTE_ARRAY", "DELTA_BYTE_ARRAY",
+                  "RLE_DICTIONARY", "PLAIN_DICTIONARY", "BYTE_STREAM_SPLIT"]
+              },
+              "default": ["PLAIN"]
+            },
+            "bloomFilter": {
+              "description": "Bloom filter algorithm to use for columns.",
+              "type": "string",
+              "enum": ["none", "all", ["column1", "column2"]],
+              "default": "none"
+              }
+        },
+        "default": {}
+    },
     "compressionCodec": {
       "description": "Compression codec to use for the Parquet file.",
       "type": "string",
