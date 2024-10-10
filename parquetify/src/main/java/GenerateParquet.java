@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -271,18 +272,29 @@ public class GenerateParquet {
       case "TIMESTAMP_MICROS":
         columnBuilder.as(LogicalTypeAnnotation.timestampType(true, LogicalTypeAnnotation.TimeUnit.MICROS));
         break;
-      case "INTEGER":
-      case "INT_8":
-      case "INT_16":
-      case "INT_32":
-      case "INT_64":
+      case "INT8":
+        columnBuilder.as(LogicalTypeAnnotation.intType(8, true));
+        break;
+      case "INT16":
+        columnBuilder.as(LogicalTypeAnnotation.intType(16, true));
+        break;
+      case "INT32":
         columnBuilder.as(LogicalTypeAnnotation.intType(32, true));
         break;
-      case "UINT_8":
-      case "UINT_16":
-      case "UINT_32":
-      case "UINT_64":
+      case "INT64":
+        columnBuilder.as(LogicalTypeAnnotation.intType(64, true));
+        break;
+      case "UINT8":
+        columnBuilder.as(LogicalTypeAnnotation.intType(8, false));
+        break;
+      case "UINT16":
+        columnBuilder.as(LogicalTypeAnnotation.intType(16, false));
+        break;
+      case "UINT32":
         columnBuilder.as(LogicalTypeAnnotation.intType(32, false));
+        break;
+      case "UINT64":
+        columnBuilder.as(LogicalTypeAnnotation.intType(64, false));
         break;
       case "BSON":
         columnBuilder.as(LogicalTypeAnnotation.bsonType());
