@@ -4,13 +4,13 @@ This project is designated for testing Parquet files. It includes tools for gene
 
 ## Available Tools
 
-- [Parquetify](#parquetify)
+- [Parquetify](#-parquetify)
   - [How To Generate Parquet Files](#how-to-generate-parquet-files)
     - [Dependencies](#dependencies)
     - [Steps To Build the Project and Generate Parquet Files](#steps-to-build-the-project-and-generate-parquet-files)
   - [Example JSON Schema for Parquet File](#example-json-schema-for-parquet-file)
 
-## Parquetify
+## 📊 Parquetify
 
 This project provides a tool for generating Parquet files from JSON schema definitions. It includes functionality for specifying encoding types, enabling bloom filters, and handling various data types. The tool is built using Java and Maven, and it is designed to facilitate regression testing for Parquet file generation.
 
