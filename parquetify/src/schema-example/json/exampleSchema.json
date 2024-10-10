@@ -5,7 +5,7 @@
     "compression": "snappy",
     "rowGroupSize": "default",
     "pageSize": "default",
-    "encodings": ["DICTIONARY", "BYTE_STREAM_SPLIT"],
+    "encodings": ["PLAIN"],
     "bloomFilter": "all"
 },
   "schema": [
@@ -13,34 +13,33 @@
       "name": "id",
       "schemaType": "required",
       "physicalType": "INT32",
-      "logicalType": "NONE",
+      "logicalType": "INT8",
       "data": [1, 2, 3, 4, 5]
     },
     {
-      "name": "test1",
+      "name": "id2",
       "schemaType": "required",
-      "physicalType": "FIXED_LEN_BYTE_ARRAY",
-      "length": 2,
-      "logicalType": "FLOAT16",
-      "data": [1.0, 2.5, 3.75, 4.125, 5.5]
+      "physicalType": "INT32",
+      "logicalType": "INT16",
+      "data": [1, 2, 3, 4, 5]
+    },
+    {
+      "name": "age",
+      "schemaType": "optional",
+      "physicalType": "INT32",
+      "logicalType": "INT32",
+      "data": [30, 25, 40, 35, 28]
     },
     {
       "name": "name",
       "schemaType": "optional",
       "physicalType": "BINARY",
-      "logicalType": "string",
+      "logicalType": "STRING",
       "data": ["Alice", "Bob", "Charlie", "David", "Eve"]
     },
     {
-      "name": "salary",
-      "schemaType": "optional",
-      "physicalType": "DOUBLE",
-      "logicalType": "NONE",
-      "data": [1000.0, 2000.0, 3000.0, 4000.0, 5000.0]
-    },
-    {
       "name": "person",
-      "schemaType": "requiredGroup",
+      "schemaType": "repeatedGroup",
       "fields": [
         {
           "name": "name",
