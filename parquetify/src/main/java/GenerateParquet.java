@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.apache.commons.cli.*;
 import org.apache.hadoop.conf.Configuration;
@@ -22,6 +23,9 @@ import org.apache.parquet.hadoop.util.HadoopOutputFile;
 import org.apache.parquet.schema.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.bson.BsonDocument;
+import org.bson.BsonArray;
+import org.bson.BsonValue;
 
 public class GenerateParquet {
 
@@ -123,6 +127,9 @@ public class GenerateParquet {
         case "BYTE_STREAM_SPLIT":
           builder.withByteStreamSplitEncoding(true);
           break;
+        case "PLAIN":
+          builder.withDictionaryEncoding(false);
+          break;
         default:
           throw new IllegalArgumentException("Invalid encoding type: " + encoding);
       }
@@ -157,7 +164,7 @@ public class GenerateParquet {
         columnBuilder = addGroupSchemaType(builder, schemaType, field.getJSONArray("fields"));
       } else {
         columnBuilder = addSchemaType(builder, schemaType, physicalType, length);
-        addLogicalType(columnBuilder, logicalType, physicalType, length);
+        addLogicalType(columnBuilder, logicalType, physicalType, length, field);
       }
 
       columnBuilder.named(name);
@@ -194,7 +201,7 @@ public class GenerateParquet {
         fieldBuilder = addGroupSchemaType(groupBuilder, fieldSchemaType, field.getJSONArray("fields"));
       } else {
         fieldBuilder = addSchemaType(groupBuilder, fieldSchemaType, fieldPhysicalType, length);
-        addLogicalType(fieldBuilder, fieldLogicalType, fieldPhysicalType, length);
+        addLogicalType(fieldBuilder, fieldLogicalType, fieldPhysicalType, length, field);
       }
 
       fieldBuilder.named(name);
@@ -234,7 +241,7 @@ public class GenerateParquet {
     }
   }
 
-  private static void addLogicalType(Types.Builder<?, ?> columnBuilder, String logicalType, String physicalType, int length) {
+  private static void addLogicalType(Types.Builder<?, ?> columnBuilder, String logicalType, String physicalType, int length, JSONObject field) {
     switch (logicalType.toUpperCase()) {
       case "MAP":
         columnBuilder.as(LogicalTypeAnnotation.mapType());
@@ -253,7 +260,10 @@ public class GenerateParquet {
         columnBuilder.as(LogicalTypeAnnotation.enumType());
         break;
       case "DECIMAL":
-        columnBuilder.as(LogicalTypeAnnotation.decimalType(10, 2));
+        int precision = field.optInt("precision", 10);
+        int scale = field.optInt("scale", 2);
+
+        columnBuilder.as(LogicalTypeAnnotation.decimalType(scale, precision));
         break;
       case "DATE":
         columnBuilder.as(LogicalTypeAnnotation.dateType());
