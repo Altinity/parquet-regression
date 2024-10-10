@@ -20,7 +20,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Set a working directory for where the repository will be mounted
-WORKDIR /opt/parquet-regression
+WORKDIR /opt/parquet-regression/parquetify
 
 # Run Maven build to compile the project and generate the jar file for parquet-generator
 # This will automatically build the jar as part of the container build process
