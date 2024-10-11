@@ -20,6 +20,7 @@ import org.apache.parquet.hadoop.example.ExampleParquetWriter;
 import org.apache.parquet.hadoop.example.GroupWriteSupport;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.apache.parquet.hadoop.util.HadoopOutputFile;
+import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.schema.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -387,7 +388,13 @@ public class GenerateParquet {
       } else if (value instanceof Long) {
         group.add(name, (Long) value);
       } else if (value instanceof String) {
-        group.add(name, (String) value);
+        // Handle UUID string by converting to 16-byte array if the field is UUID
+        if (isUUID(name)) {
+          byte[] uuidBytes = hexStringToByteArray((String) value);
+          group.add(name, org.apache.parquet.io.api.Binary.fromConstantByteArray(uuidBytes));
+        } else {
+          group.add(name, (String) value);
+        }
       } else if (value instanceof Boolean) {
         group.add(name, (Boolean) value);
       } else if (value instanceof Double) {
@@ -411,5 +418,21 @@ public class GenerateParquet {
     } catch (ClassCastException e) {
       throw new IllegalArgumentException("Error adding value to group. Value type mismatch for column: " + name, e);
     }
+  }
+
+  private static boolean isUUID(String fieldName) {
+    // You could add logic to identify if a particular field is a UUID
+    // For simplicity, let's assume field names ending with '_uuid' indicate UUID
+    return fieldName.toLowerCase().contains("uuid");
+  }
+
+  private static byte[] hexStringToByteArray(String s) {
+    int len = s.length();
+    byte[] data = new byte[len / 2];
+    for (int i = 0; i < len; i += 2) {
+      data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+              + Character.digit(s.charAt(i+1), 16));
+    }
+    return data;
   }
 }
