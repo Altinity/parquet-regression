@@ -1,5 +1,5 @@
 # Use Ubuntu 24.04 as the base image
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
 # Set environment variables for non-interactive installs
 ENV DEBIAN_FRONTEND=noninteractive
@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install system dependencies
 # Install dependencies for building Thrift from source
 RUN apt-get update && apt-get install -y \
-    openjdk-17-jdk-headless \
+    openjdk-17-jdk \
     maven \
     git \
     curl \
