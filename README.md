@@ -50,13 +50,26 @@ sudo apt install maven
 mvn clean package
 ```
 
-5. Run the following command to generate the parquet files
+5. Run the following command to install the project from the generated `.deb`
 
 ```shell
-java -jar parqeutify.jar --json ../src/schema-example/json/exampleSchema.json --output test.parquet
+sudo dpkg -i parquetify_0.0.6-1_amd64.deb
+```
+> [!WARNING]
+> There might be an issue with some dependencies on ubuntu 24.04 so for that run the following command:
+> ```shell
+> sudo apt-get install -f
+>  ```
+> Once done repeat the step 5.
+
+6. To use the tool, run the following command
+
+```shell
+parquetify -j <path_to_json_schema> -o <output_directory>
 ```
 > [!NOTE]
 > The `--json` flag is used to specify the JSON schema file and the `--output` flag is used to specify the output file name.
+
 
 ## Example JSON Schema for Parquet File
 
