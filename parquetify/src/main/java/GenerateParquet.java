@@ -36,8 +36,9 @@ public class GenerateParquet {
     try {
       String content = new String(Files.readAllBytes(Paths.get(cmd.getOptionValue("json"))));
       JSONObject configJson = new JSONObject(content);
+      String fileName = configJson.getString("fileName");
       String outputPath = cmd.getOptionValue("output");
-      generateParquet(configJson, outputPath);
+      generateParquet(configJson, outputPath + "/" + fileName);
     } catch (IOException e) {
       System.err.println("Error reading the JSON file: " + e.getMessage());
       e.printStackTrace();
