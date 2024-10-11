@@ -73,4 +73,4 @@ parquetify -j <path_to_json_schema> -o <output_directory>
 
 ## Example JSON Schema for Parquet File
 
-The example of the JSON schema file can be found [here]([https://github.com/Altinity/parquet-regression/blob/main/src/schema-example/json/exampleSchema.json](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json))
+The example of the JSON schema file can be found [here](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json)
