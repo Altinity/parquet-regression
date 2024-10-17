@@ -1,0 +1,41 @@
+name: Build and Publish .deb Package
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger the workflow when a version tag is pushed (e.g., v1.0.0)
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Give execution permission to the build.sh script
+      - name: Make build.sh executable
+        run: chmod +x ./build.sh
+
+      # Run the build.sh script to build the Docker image and generate the .deb package
+      - name: Run build.sh
+        run: ./build.sh
+
+      # Find the generated .deb file in the parquetify directory
+      - name: Locate the .deb file
+        id: locate_deb
+        run: |
+          DEB_FILE=$(find ./parquetify -name "parquetify_*_amd64.deb")
+          echo "::set-output name=deb_file::$DEB_FILE"
+
+      # Upload the located .deb package to GitHub Releases
+      - name: Upload .deb to GitHub Releases
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.locate_deb.outputs.deb_file }}
+          asset_name: parquetify_${{ github.ref_name }}_amd64.deb
+          asset_content_type: application/x-debian-package
