@@ -2,7 +2,10 @@ name: Build and Publish .deb Package
 
 on:
   workflow_dispatch:
-
+    inputs:
+      version:
+        description: 'Version of the release'
+        required: true
 
 jobs:
   build-deb:
@@ -15,11 +18,11 @@ jobs:
 
       # Give execution permission to the build.sh script
       - name: Make build.sh executable
-        run: chmod +x ./build
+        run: chmod +x ./build.sh
 
       # Run the build.sh script to build the Docker image and generate the .deb package
-      - name: Run build
-        run: ./build
+      - name: Run build.sh
+        run: ./build.sh
 
       # Find the generated .deb file in the parquetify directory
       - name: Locate the .deb file
@@ -28,13 +31,25 @@ jobs:
           DEB_FILE=$(find ./parquetify -name "parquetify_*_amd64.deb")
           echo "::set-output name=deb_file::$DEB_FILE"
 
-      # Upload the located .deb package to GitHub Releases
+      # Create a release (if it doesn't exist) and capture the upload URL
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}  # Provide a version in the workflow dispatch inputs
+          release_name: Release ${{ github.event.inputs.version }}
+          draft: false
+          prerelease: false
+
+      # Upload the .deb package to GitHub Releases
       - name: Upload .deb to GitHub Releases
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ steps.locate_deb.outputs.deb_file }}
-          asset_name: parquetify_${{ github.ref_name }}_amd64.deb
+          asset_name: parquetify_${{ github.event.inputs.version }}_amd64.deb
           asset_content_type: application/x-debian-package
