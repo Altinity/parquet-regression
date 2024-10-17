@@ -1,4 +1,4 @@
-name: Build and Publish .deb Package
+name: Release Pipeline
 
 on:
   workflow_dispatch:
@@ -12,38 +12,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Give execution permission to the build script
       - name: Make build.sh executable
         run: chmod +x ./build
 
-      # Run the build.sh script to build the Docker image and generate the .deb package
       - name: Run build
         run: ./build
 
-      # Find the generated .deb file in the parquetify directory
       - name: Locate the .deb file
         id: locate_deb
         run: |
           DEB_FILE=$(find ./parquetify -name "parquetify_*_amd64.deb")
           echo "::set-output name=deb_file::$DEB_FILE"
 
-      # Create a release (if it doesn't exist) and capture the upload URL
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.event.inputs.version }}  # Provide a version in the workflow dispatch inputs
+          tag_name: ${{ github.event.inputs.version }}
           release_name: Release ${{ github.event.inputs.version }}
           draft: false
           prerelease: false
 
-      # Upload the .deb package to GitHub Releases
       - name: Upload .deb to GitHub Releases
         uses: actions/upload-release-asset@v1
         env:
