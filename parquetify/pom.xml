@@ -6,7 +6,7 @@
 
     <groupId>org.altinity.parquet.regression</groupId>
     <artifactId>parquet-regression</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -67,10 +67,13 @@
                             <type>DEB</type>
                             <!-- Application version -->
                             <appVersion>${project.version}</appVersion>
+                            <!-- Install directory (e.g., to /usr/bin) -->
+                            <installDir>/usr</installDir>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
     <dependencies>
