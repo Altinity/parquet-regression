@@ -15,11 +15,11 @@ jobs:
 
       # Give execution permission to the build.sh script
       - name: Make build.sh executable
-        run: chmod +x ./build.sh
+        run: chmod +x ./build
 
       # Run the build.sh script to build the Docker image and generate the .deb package
-      - name: Run build.sh
-        run: ./build.sh
+      - name: Run build
+        run: ./build
 
       # Find the generated .deb file in the parquetify directory
       - name: Locate the .deb file
