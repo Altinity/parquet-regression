@@ -1,4 +1,4 @@
-# Functionality that is not yet supported
+# Functionality That Is Not Yet Supported
 
 - Setting different encoding on different columns
 - Some encodings: `DELTA_BYTE_ARRAY`, `DELTA_LENGTH_BYTE_ARRAY`
