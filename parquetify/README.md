@@ -5,4 +5,4 @@
 - Inserting data into `FLOAT16` columns
 - Creating parquet files with `Page v2` header (need to investigate what `Page v2` header implies)
 - Encryption on any level
-- The following compressions not supoprted ["GZIP", "LZO", "BROTLI", "LZ4"]
+- The following compressions not supoprted `["GZIP", "LZO", "BROTLI", "LZ4"]`
