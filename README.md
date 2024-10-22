@@ -7,7 +7,7 @@
 
 This project is designated for testing Parquet files. It includes tools for generating and validating Parquet files to ensure they meet specific requirements and standards.
 
-## Available Tools
+# Available Tools
 
 ### 📊 Parquetify
 
