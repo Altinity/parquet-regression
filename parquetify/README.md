@@ -137,11 +137,12 @@ A simple example with `INT32` would look like this:
     }
 ```
 
-Where `name` is a name of the column, `required` in `schemType` indicates that there are no null values allowed for this field.
-`physicalType` is the actual physical type of the column, `logicalType` is the logical type of the column. In order to 
-insert data into the column, you need to provide the `data` field with an array of values.
+- Where `name` is a name of the column. 
+- `required` in `schemType` indicates that there are no null values allowed for this field.
+- `physicalType` is the actual physical type of the column, `logicalType` is the logical type of the column. 
+- In order to insert data into the column, you need to provide the `data` field with an array of values.
 
-The idea here is that you can specify only `physicalType` and you will get the column with the INT32 physical type and logical type `NONE`. 
+The way Parquet works you can specify only `physicalType` and you will get the column with the INT32 physical type and logical type `NONE`. 
 But only specifying `logicalType` will not work. 
 
 ```json
@@ -190,14 +191,14 @@ A simple example with a nested type would look like this:
     }
 ```
 
-Here the `"schemaType": "repeatedGroup"` indicates that we want to create an `array`. `requiredGroup` and `optionalGroup` 
-would create a field with `tuple` datatype.
+- Here the `"schemaType": "repeatedGroup"` indicates that we want to create an `array`. 
+- `requiredGroup` and `optionalGroup` would create a field with `tuple` datatype.
 
 # Missing Functionality
 
 **Generating Parquet files with:**
 
 * encodings: `DELTA_BYTE_ARRAY`, `DELTA_LENGTH_BYTE_ARRAY`, `RLE`, `BIT_PACKED`, `DELTA_BINARY_PACKED`
-* inserting data into `FLOAT16` columns
+* inserting data into `FLOAT16` columns (will be fixed in next release)
 * encryption on any level
 * compressions: `GZIP`, `LZO`, `BROTLI`, `LZ4`
