@@ -63,7 +63,7 @@ parquetify -j example.json -o /path/to/output/parquet/file.parquet
 > The tool allows you to specify any kind of structure for the Parquet file, including incorrect ones, in that case the 
 > file will be generated but the tool or DBMS you are trying to read it with will not be able to read from it.
 
-### How to Correctly Build the JSON for Parquetify
+## How to Correctly Build the JSON for Parquetify
 
 `Parquetify` uses JSON file to determine the file structure and the values that will be written to the Parquet file. 
 Because the JSON can be built in many different ways we have [specific JSON schema](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json)
@@ -109,8 +109,15 @@ simple structure of JSON looks like this:
     }
   ]
 }
-
 ```
+
+> [!IMPORTANT]
+> 
+> The values inside the `schema` in JSON take care of the actual schema of the Parquet file. The data about a single
+column should be enclosed inside the `{}` symbols.
+### How to Build Parquet with regular types
+
+
 
 # Missing Functionality
 
