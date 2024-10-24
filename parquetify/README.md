@@ -57,10 +57,12 @@ To generate your first Parquet file you can use our pre-made example JSON locate
 ```shell
 parquetify -j example.json -o /path/to/output/parquet/file.parquet
 ```
+![Peek 2024-10-24 17-24](https://github.com/user-attachments/assets/d7c27bff-ba00-40bc-987b-c446ed8c7bd0)
+
 > [!WARNING]
 > The tool allows you to specify any kind of structure for the Parquet file, including incorrect ones, in that case the 
 > file will be generated but the tool or DBMS you are trying to read it with will not be able to read from it.
-> 
+
 ### How to Build the JSON for Parquetify and 
 
 `Parquetify` uses JSON file to determine the file structure and the values that will be written to the Parquet file. 
