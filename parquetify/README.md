@@ -39,17 +39,32 @@ after downloading you will have a get the `.deb` package that you can install wi
 sudo apt install ./parquetify_1.0.3_amd64.deb
 ```
 
-run the `parquetify` in your terminal to check if it was installed
+Run the `parquetify` in your terminal to check if it was installed
 
 ```shell
-root@eb1f5ede14df:/ parquetify
+root@eb1f5ede14df: parquetify
 Error parsing command line arguments: Missing required options: j, o
 usage: GenerateParquet
  -j,--json <arg>     Path to the JSON file
  -o,--output <arg>   Output path for the Parquet file\
 ```
 
+Now you can pass the JSON file to the `parquetify` tool to generate Parquet files based on the values in the given JSON.
 
+To generate your first Parquet file you can use our pre-made example JSON located in our [schema-example](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json) folder.
+
+```shell
+parquetify -j example.json -o /path/to/output/parquet/file.parquet
+```
+> [!WARNING]
+> The tool allows you to specify any kind of structure for the Parquet file, including incorrect ones, in that case the 
+> file will be generated but the tool or DBMS you are trying to read it with will not be able to read from it.
+> 
+### How to Build the JSON for Parquetify and 
+
+`Parquetify` uses JSON file to determine the file structure and the values that will be written to the Parquet file. 
+Because the JSON can be built in many different way we have [specific JSON schema](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json)
+that defines the structure and validation rules for a JSON document.
 
 # Missing Functionality
 
