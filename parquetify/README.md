@@ -1,6 +1,6 @@
 # Parquetify: Generate Parquet Files from JSON
 
-Parquetify is a lightweight tool leveraging the [parquet-java](https://github.com/apache/parquet-java) library to generate Parquet files based on the structure provided in a JSON file. With Parquetify, you can easily convert structured data into an optimized Parquet format, enabling efficient storage and fast querying.
+Parquetify is a lightweight tool leveraging the [parquet-java](https://github.com/apache/parquet-java) library to generate Parquet files based on the structure provided in a JSON file.
 
 ## Features
 
