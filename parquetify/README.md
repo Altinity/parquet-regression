@@ -149,6 +149,43 @@ But only specifying `logicalType` will not work.
 > [!NOTE]
 > Read more about parquet datatypes [here](https://parquet.apache.org/docs/file-format/types/)
 
+### How to Build Parquet with nested types
+
+A simple example with a nested type would look like this:
+
+```json
+    {
+      "name": "person",
+      "schemaType": "repeatedGroup",
+      "fields": [
+        {
+          "name": "name",
+          "schemaType": "optional",
+          "physicalType": "BINARY",
+          "logicalType": "STRING"
+        },
+        {
+          "name": "age",
+          "schemaType": "required",
+          "physicalType": "INT32"
+        }
+      ],
+      "data": [
+        {
+          "name": "Alice",
+          "age": 30
+        },
+        {
+          "name": "Bob",
+          "age": 25
+        }
+      ]
+    }
+```
+
+Here the `"schemaType": "repeatedGroup"` indicates that we want to create an `array`. `requiredGroup` and `optionalGroup` 
+would create a field with `tuple` datatype.
+
 # Missing Functionality
 
 **Generating Parquet files with:**
