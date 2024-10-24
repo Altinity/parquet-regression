@@ -23,11 +23,11 @@ Parquetify is a lightweight tool leveraging the [parquet-java](https://github.co
         - [Handling Nested Types](#handling-nested-types)
 - [Missing Functionality](#missing-functionality)
 
-## Quick Start
+## [Quick Start](#table-of-contents)
 
 To get started with Parquetify, download the latest release from the [Releases page](https://github.com/Altinity/parquet-regression/releases):
 
-### Installation
+### [Installation](#table-of-contents)
 
 ```bash
 sudo apt update
@@ -58,7 +58,7 @@ usage: GenerateParquet
  -o,--output <arg>   Output path for the Parquet file
 ```
 
-### Creating Your First Parquet File
+### [Creating Your First Parquet File](#table-of-contents)
 
 To generate your first Parquet file, use the provided example JSON schema available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
 
@@ -69,7 +69,7 @@ parquetify -j example.json -o /path/to/output/file.parquet
 > [!WARNING]
 > Parquetify allows you to specify any structure, including incorrect ones. If the structure is invalid, the Parquet file may be generated, but it may not be readable by tools or databases.
 
-### Building JSON for Parquetify
+### [Building JSON for Parquetify](#table-of-contents)
 
 Parquetify uses a JSON schema to define the file structure and values that will populate your Parquet file. The schema follows a specific format, which is outlined [here](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json).
 
@@ -115,7 +115,7 @@ A simple JSON schema structure looks like:
 }
 ```
 
-### Handling Regular Types
+### [Handling Regular Types](#table-of-contents)
 
 A typical example for handling a simple column type (`INT32`) looks like this:
 
@@ -135,7 +135,7 @@ A typical example for handling a simple column type (`INT32`) looks like this:
 - `logicalType`: Defines the logical type for better data interpretation.
 - `data`: An array of values to populate the column.
 
-### Handling Nested Types
+### [Handling Nested Types](#table-of-contents)
 
 You can define nested types as follows:
 
@@ -172,7 +172,7 @@ You can define nested types as follows:
 - `repeatedGroup`: Defines an array of objects.
 - `requiredGroup` and `optionalGroup`: Define tuple-like structures.
 
-## Missing Functionality
+## [Missing Functionality](#table-of-contents)
 
 - Additional encodings (`DELTA_BYTE_ARRAY`, `DELTA_LENGTH_BYTE_ARRAY`, `RLE`, etc.)
 - Data insertion into `FLOAT16` columns (planned for next release)
