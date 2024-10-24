@@ -19,6 +19,10 @@ A simple tool that utilizes the [parquet-java](https://github.com/apache/parquet
 
 # Table of Contents
 
+* [Quick Start](#quick-start)
+  * [How to Correctly Build the JSON for Parquetify](#how-to-correctly-build-the-json-for-parquetify)
+    * [How to Build Parquet with regular types](#how-to-build-parquet-with-regular-types)
+    * [How to Build Parquet with nested types](#how-to-build-parquet-with-nested-types)
 * [Missing Functionality](#missing-functionality)
 
 
