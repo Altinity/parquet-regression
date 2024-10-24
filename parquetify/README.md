@@ -42,7 +42,7 @@ sudo apt install ./parquetify_1.0.3_amd64.deb
 run the `parquetify` in your terminal to check if it was installed
 
 ```shell
-root@eb1f5ede14df:/# parquetify
+root@eb1f5ede14df:/ parquetify
 Error parsing command line arguments: Missing required options: j, o
 usage: GenerateParquet
  -j,--json <arg>     Path to the JSON file
