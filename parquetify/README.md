@@ -16,6 +16,7 @@ Parquetify is a lightweight tool leveraging the [parquet-java](https://github.co
 ## Table of Contents
 
 - [Quick Start](#quick-start)
+    - [Installation](#installation) 
     - [Creating Your First Parquet File](#creating-your-first-parquet-file)
     - [Building JSON for Parquetify](#building-json-for-parquetify)
         - [Handling Regular Types](#handling-regular-types)
@@ -25,6 +26,8 @@ Parquetify is a lightweight tool leveraging the [parquet-java](https://github.co
 ## Quick Start
 
 To get started with Parquetify, download the latest release from the [Releases page](https://github.com/Altinity/parquet-regression/releases):
+
+### Installation
 
 ```bash
 sudo apt update
