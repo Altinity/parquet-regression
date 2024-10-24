@@ -31,7 +31,8 @@ sudo apt update
 wget https://github.com/Altinity/parquet-regression/releases/download/1.0.3/parquetify_1.0.3_amd64.deb
 ```
 
-> **Note:** Ensure that you download the package corresponding to your system architecture. Both ARM and x86_64 are supported.
+> [!NOTE] 
+> Ensure that you download the package corresponding to your system architecture. Both ARM and x86_64 are supported.
 
 Install the `.deb` package:
 
@@ -62,7 +63,8 @@ To generate your first Parquet file, use the provided example JSON schema availa
 parquetify -j example.json -o /path/to/output/file.parquet
 ```
 
-> **Warning:** Parquetify allows you to specify any structure, including incorrect ones. If the structure is invalid, the Parquet file may be generated, but it may not be readable by tools or databases.
+> [!WARNING]
+> Parquetify allows you to specify any structure, including incorrect ones. If the structure is invalid, the Parquet file may be generated, but it may not be readable by tools or databases.
 
 ### Building JSON for Parquetify
 
