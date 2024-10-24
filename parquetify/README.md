@@ -66,8 +66,51 @@ parquetify -j example.json -o /path/to/output/parquet/file.parquet
 ### How to Build the JSON for Parquetify and 
 
 `Parquetify` uses JSON file to determine the file structure and the values that will be written to the Parquet file. 
-Because the JSON can be built in many different way we have [specific JSON schema](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json)
+Because the JSON can be built in many different ways we have [specific JSON schema](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json)
 that defines the structure and validation rules for a JSON document.
+
+simple structure of JSON looks like this:
+
+```json
+{
+  "fileName": "example_output.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "UNCOMPRESSED",
+    "rowGroupSize": "default",
+    "pageSize": "default",
+    "encodings": ["PLAIN"],
+    "bloomFilter": "all"
+},
+  "schema": [
+    {
+      "name": "id",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "INT8",
+      "data": [1, 2, 3, 4, 5]
+    },
+    {
+      "name": "person",
+      "schemaType": "repeatedGroup",
+      "fields": [
+        {
+          "name": "name",
+          "schemaType": "optional",
+          "physicalType": "BINARY",
+          "logicalType": "STRING"
+        },
+        {
+          "name": "age",
+          "schemaType": "required",
+          "physicalType": "INT32"
+        }
+      ]
+    }
+  ]
+}
+
+```
 
 # Missing Functionality
 
