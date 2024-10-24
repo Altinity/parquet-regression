@@ -73,7 +73,7 @@ parquetify -j example.json -o /path/to/output/file.parquet
 
 Parquetify uses a JSON schema to define the file structure and values that will populate your Parquet file. The schema follows a specific format, which is outlined [here](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json).
 
-A simple JSON schema structure looks like:
+A simple JSON structure looks like:
 
 ```json
 {
