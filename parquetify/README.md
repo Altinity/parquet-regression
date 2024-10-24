@@ -1,82 +1,74 @@
-# Generating Parquet Files From JSON With the Parquetify
+# Parquetify: Generate Parquet Files from JSON
 
-A simple tool that utilizes the [parquet-java](https://github.com/apache/parquet-java) library to generate Parquet files based on the structure provided from a JSON file.
+Parquetify is a lightweight tool leveraging the [parquet-java](https://github.com/apache/parquet-java) library to generate Parquet files based on the structure provided in a JSON file. With Parquetify, you can easily convert structured data into an optimized Parquet format, enabling efficient storage and fast querying.
 
-# Features
+## Features
 
-**Generating Parquet files with:**
+- **Physical Data Types:** Customize the physical data types for your Parquet files.
+- **Logical Data Types:** Support for a wide range of logical types.
+- **Precision & Scale:** Define precision and scale for `DECIMAL` types.
+- **Compression:** Choose from `SNAPPY`, `ZSTD`, or `UNCOMPRESSED`.
+- **Encodings:** Includes `DICTIONARY`, `BYTE_STREAM_SPLIT`, and `PLAIN`.
+- **Bloom Filter:** Apply a bloom filter to specific columns or all columns (including those within groups).
+- **Writer Version:** Specify writer version (`1.0`, `2.0`).
+- **Customizable Sizes:** Set specific row group and page sizes.
 
-* specific physical data types
-* specific logical data types
-* specific precision and scale for `DECIMAL`
-* compressions: `SNAPPY`, `ZSTD` or leaving the file `UNCOMPRESSED`
-* encodings: `DICTIONARY`, `BYTE_STREAM_SPLIT`, `PLAIN`
-* bloom filter on a specific column or on all columns including columns inside a group
-* specifying a writer version: `1.0`, `2.0`
-* specific row group size
-* specific page size
+## Table of Contents
 
+- [Quick Start](#quick-start)
+    - [Creating Your First Parquet File](#creating-your-first-parquet-file)
+    - [Building JSON for Parquetify](#building-json-for-parquetify)
+        - [Handling Regular Types](#handling-regular-types)
+        - [Handling Nested Types](#handling-nested-types)
+- [Missing Functionality](#missing-functionality)
 
-# Table of Contents
+## Quick Start
 
-* [Quick Start](#quick-start)
-  * [Create Your First Parquet File](#create-your-first-parquet-file) 
-  * [How to Correctly Build the JSON for Parquetify](#how-to-correctly-build-the-json-for-parquetify)
-    * [How to Build Parquet with regular types](#how-to-build-parquet-with-regular-types)
-    * [How to Build Parquet with nested types](#how-to-build-parquet-with-nested-types)
-* [Missing Functionality](#missing-functionality)
+To get started with Parquetify, download the latest release from the [Releases page](https://github.com/Altinity/parquet-regression/releases):
 
-
-# Quick Start
-
-To use the `parqeutify` tool you can simply download the latest release from the [releases page](https://github.com/Altinity/parquet-regression/releases)
-
-```shell
+```bash
 sudo apt update
 wget https://github.com/Altinity/parquet-regression/releases/download/1.0.3/parquetify_1.0.3_amd64.deb
 ```
 
-> [!NOTE]
-> Download the package corresponding to your system architecture. ARM and x86_64 are supported.
+> **Note:** Ensure that you download the package corresponding to your system architecture. Both ARM and x86_64 are supported.
 
-After downloading the release you will have a `.deb` package that you can install with the following command:
+Install the `.deb` package:
 
-```shell
+```bash
 sudo apt install ./parquetify_1.0.3_amd64.deb
 ```
 
-Run the `parquetify` in your terminal to check if it was installed
+To confirm the installation, run the following command:
 
-```shell
-root@eb1f5ede14df: parquetify
+```bash
+parquetify
+```
+
+If successful, you will see usage instructions like:
+
+```bash
 Error parsing command line arguments: Missing required options: j, o
 usage: GenerateParquet
  -j,--json <arg>     Path to the JSON file
- -o,--output <arg>   Output path for the Parquet file\
+ -o,--output <arg>   Output path for the Parquet file
 ```
 
-Now you can pass the JSON file to the `parquetify` tool to generate Parquet files based on the values in the given JSON.
+### Creating Your First Parquet File
 
-## Create Your First Parquet File
+To generate your first Parquet file, use the provided example JSON schema available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
 
-To generate your first Parquet file you can use our pre-made example JSON located in our [schema-example](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json) folder.
-
-```shell
-parquetify -j example.json -o /path/to/output/parquet/file.parquet
+```bash
+parquetify -j example.json -o /path/to/output/file.parquet
 ```
-![Peek 2024-10-24 17-24](https://github.com/user-attachments/assets/d7c27bff-ba00-40bc-987b-c446ed8c7bd0)
 
-> [!WARNING]
-> The tool allows you to specify any kind of structure for the Parquet file, including incorrect ones, in that case the 
-> file will be generated but the tool or DBMS you are trying to read it with will not be able to read from it.
+> **Warning:** Parquetify allows you to specify any structure, including incorrect ones. If the structure is invalid, the Parquet file may be generated, but it may not be readable by tools or databases.
 
-## How to Correctly Build the JSON for Parquetify
+### Building JSON for Parquetify
 
-`Parquetify` uses JSON file to determine the file structure and the values that will be written to the Parquet file. 
-Because the JSON can be built in many different ways we have [specific JSON schema](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json)
-that defines the structure and validation rules for a JSON document.
+Parquetify uses a JSON schema to define the file structure and values that will populate your Parquet file. The schema follows a specific format, which is outlined [here](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json).
 
-simple structure of JSON looks like this:
+A simple JSON schema structure looks like:
 
 ```json
 {
@@ -88,7 +80,7 @@ simple structure of JSON looks like this:
     "pageSize": "default",
     "encodings": ["PLAIN"],
     "bloomFilter": "all"
-},
+  },
   "schema": [
     {
       "name": "id",
@@ -118,87 +110,67 @@ simple structure of JSON looks like this:
 }
 ```
 
-> [!IMPORTANT]
-> 
-> The values inside the `schema` in JSON take care of the actual schema of the Parquet file. The data about a single
-column should be enclosed inside the `{}` symbols.
+### Handling Regular Types
 
-### How to Build Parquet with regular types
-
-A simple example with `INT32` would look like this:
+A typical example for handling a simple column type (`INT32`) looks like this:
 
 ```json
+{
+  "name": "id",
+  "schemaType": "required",
+  "physicalType": "INT32",
+  "logicalType": "INT8",
+  "data": [1, 2, 3, 4, 5]
+}
+```
+
+- `name`: Column name.
+- `schemaType`: Specifies whether the column allows null values (`required` means no null values).
+- `physicalType`: Defines the physical data type.
+- `logicalType`: Defines the logical type for better data interpretation.
+- `data`: An array of values to populate the column.
+
+### Handling Nested Types
+
+You can define nested types as follows:
+
+```json
+{
+  "name": "person",
+  "schemaType": "repeatedGroup",
+  "fields": [
     {
-      "name": "id",
+      "name": "name",
+      "schemaType": "optional",
+      "physicalType": "BINARY",
+      "logicalType": "STRING"
+    },
+    {
+      "name": "age",
       "schemaType": "required",
-      "physicalType": "INT32",
-      "logicalType": "INT8",
-      "data": [1, 2, 3, 4, 5]
+      "physicalType": "INT32"
     }
-```
-
-- Where `name` is a name of the column. 
-- `required` in `schemType` indicates that there are no null values allowed for this field.
-- `physicalType` is the actual physical type of the column, `logicalType` is the logical type of the column. 
-- In order to insert data into the column, you need to provide the `data` field with an array of values.
-
-The way Parquet works you can specify only `physicalType` and you will get the column with the INT32 physical type and logical type `NONE`. 
-But only specifying `logicalType` will not work. 
-
-```json
+  ],
+  "data": [
     {
-      "name": "id",
-      "schemaType": "required",
-      "physicalType": "INT32",
-      "data": [1, 2, 3, 4, 5]
-    }
-```
-
-> [!NOTE]
-> Read more about parquet datatypes [here](https://parquet.apache.org/docs/file-format/types/)
-
-### How to Build Parquet with nested types
-
-A simple example with a nested type would look like this:
-
-```json
+      "name": "Alice",
+      "age": 30
+    },
     {
-      "name": "person",
-      "schemaType": "repeatedGroup",
-      "fields": [
-        {
-          "name": "name",
-          "schemaType": "optional",
-          "physicalType": "BINARY",
-          "logicalType": "STRING"
-        },
-        {
-          "name": "age",
-          "schemaType": "required",
-          "physicalType": "INT32"
-        }
-      ],
-      "data": [
-        {
-          "name": "Alice",
-          "age": 30
-        },
-        {
-          "name": "Bob",
-          "age": 25
-        }
-      ]
+      "name": "Bob",
+      "age": 25
     }
+  ]
+}
 ```
 
-- Here the `"schemaType": "repeatedGroup"` indicates that we want to create an `array`. 
-- `requiredGroup` and `optionalGroup` would create a field with `tuple` datatype.
+- `repeatedGroup`: Defines an array of objects.
+- `requiredGroup` and `optionalGroup`: Define tuple-like structures.
 
-# Missing Functionality
+## Missing Functionality
 
-**Generating Parquet files with:**
+- Additional encodings (`DELTA_BYTE_ARRAY`, `DELTA_LENGTH_BYTE_ARRAY`, `RLE`, etc.)
+- Data insertion into `FLOAT16` columns (planned for next release)
+- Parquet encryption
+- Compression algorithms (`GZIP`, `LZO`, `BROTLI`, `LZ4`)
 
-* encodings: `DELTA_BYTE_ARRAY`, `DELTA_LENGTH_BYTE_ARRAY`, `RLE`, `BIT_PACKED`, `DELTA_BINARY_PACKED`
-* inserting data into `FLOAT16` columns (will be fixed in next release)
-* encryption on any level
-* compressions: `GZIP`, `LZO`, `BROTLI`, `LZ4`
