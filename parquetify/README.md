@@ -20,6 +20,7 @@ A simple tool that utilizes the [parquet-java](https://github.com/apache/parquet
 # Table of Contents
 
 * [Quick Start](#quick-start)
+  * [Create Your First Parquet File](#create-your-first-parquet-file) 
   * [How to Correctly Build the JSON for Parquetify](#how-to-correctly-build-the-json-for-parquetify)
     * [How to Build Parquet with regular types](#how-to-build-parquet-with-regular-types)
     * [How to Build Parquet with nested types](#how-to-build-parquet-with-nested-types)
@@ -55,6 +56,8 @@ usage: GenerateParquet
 ```
 
 Now you can pass the JSON file to the `parquetify` tool to generate Parquet files based on the values in the given JSON.
+
+## Create Your First Parquet File
 
 To generate your first Parquet file you can use our pre-made example JSON located in our [schema-example](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json) folder.
 
