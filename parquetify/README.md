@@ -60,7 +60,7 @@ usage: GenerateParquet
 
 ### [Creating Your First Parquet File](#table-of-contents)
 
-To generate your first Parquet file, use the provided example JSON schema available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
+To generate your first Parquet file, use the provided example JSON available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
 
 ```bash
 parquetify -j example.json -o /path/to/output/file.parquet
