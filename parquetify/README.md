@@ -115,9 +115,39 @@ simple structure of JSON looks like this:
 > 
 > The values inside the `schema` in JSON take care of the actual schema of the Parquet file. The data about a single
 column should be enclosed inside the `{}` symbols.
+
 ### How to Build Parquet with regular types
 
+A simple example with `INT32` would look like this:
 
+```json
+    {
+      "name": "id",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "INT8",
+      "data": [1, 2, 3, 4, 5]
+    }
+```
+
+Where `name` is a name of the column, `required` in `schemType` indicates that there are no null values allowed for this field.
+`physicalType` is the actual physical type of the column, `logicalType` is the logical type of the column. In order to 
+insert data into the column, you need to provide the `data` field with an array of values.
+
+The idea here is that you can specify only `physicalType` and you will get the column with the INT32 physical type and logical type `NONE`. 
+But only specifying `logicalType` will not work. 
+
+```json
+    {
+      "name": "id",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "data": [1, 2, 3, 4, 5]
+    }
+```
+
+> [!NOTE]
+> Read more about parquet datatypes [here](https://parquet.apache.org/docs/file-format/types/)
 
 # Missing Functionality
 
