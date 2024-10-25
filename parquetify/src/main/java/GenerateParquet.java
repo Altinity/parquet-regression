@@ -10,6 +10,7 @@ import org.apache.parquet.hadoop.example.ExampleParquetWriter;
 import org.apache.parquet.hadoop.example.GroupWriteSupport;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.apache.parquet.hadoop.util.HadoopOutputFile;
+import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.schema.LogicalTypeAnnotation;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
@@ -375,6 +376,7 @@ public class GenerateParquet {
         }
     }
 
+
     private static void appendValueToGroup(Group group, String name, Object value) {
         try {
             if (value instanceof Integer) {
@@ -385,7 +387,7 @@ public class GenerateParquet {
                 // Handle UUID string by converting to 16-byte array if the field is UUID
                 if (isUUID(name)) {
                     byte[] uuidBytes = hexStringToByteArray((String) value);
-                    group.add(name, org.apache.parquet.io.api.Binary.fromConstantByteArray(uuidBytes));
+                    group.add(name, Binary.fromConstantByteArray(uuidBytes));
                 } else {
                     group.add(name, (String) value);
                 }
@@ -396,9 +398,11 @@ public class GenerateParquet {
             } else if (value instanceof Float) {
                 group.add(name, (Float) value);
             } else if (value instanceof BigDecimal) {
-                group.add(name, ((BigDecimal) value).doubleValue());
+                BigDecimal decimalValue = (BigDecimal) value;
+                byte[] bytes = decimalValue.unscaledValue().toByteArray();
+                group.add(name, Binary.fromConstantByteArray(bytes));
             } else if (value instanceof byte[]) {
-                group.add(name, org.apache.parquet.io.api.Binary.fromConstantByteArray((byte[]) value));
+                group.add(name, Binary.fromConstantByteArray((byte[]) value));
             } else if (value instanceof JSONObject) {
                 Group nestedGroup = group.addGroup(name);
                 JSONObject jsonObject = (JSONObject) value;
@@ -413,6 +417,7 @@ public class GenerateParquet {
             throw new IllegalArgumentException("Error adding value to group. Value type mismatch for column: " + name, e);
         }
     }
+
 
     private static boolean isUUID(String fieldName) {
         // We add logic to identify if a particular field is a UUID
