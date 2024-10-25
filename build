@@ -1,10 +1,17 @@
 #!/usr/bin/bash
 
-echo "Build parquet-generator-builder Docker image"
-docker build -t parquet-generator-builder docker/.
+# Determine which Dockerfile to use
+if [ "$1" == "arm" ]; then
+    DOCKERFILE="docker/Dockerfile_ARM"
+else
+    DOCKERFILE="docker/Dockerfile"
+fi
 
-echo "Build parquet-generator"
+echo "Building parquet-generator-builder Docker image using $DOCKERFILE"
+docker build -t parquet-generator-builder -f $DOCKERFILE docker/.
+
+echo "Building parquet-generator"
 docker run \
-    -v .:/opt/parquet-regression \
-    -v ./.m2:/root/.m2 \
+    -v "$(pwd)":/opt/parquet-regression \
+    -v "$(pwd)/.m2":/root/.m2 \
     parquet-generator-builder
