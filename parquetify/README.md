@@ -110,7 +110,13 @@ A simple JSON structure looks like:
           "schemaType": "required",
           "physicalType": "INT32"
         }
-      ]
+      ],
+      "data": [
+        {
+          "name": "Alice",
+          "age": 30
+        }
+        ]
     }
   ]
 }
