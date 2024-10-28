@@ -14,7 +14,7 @@ jobs:
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-      - name: Create GitHub Release
+      - name: 📦 Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -31,23 +31,23 @@ jobs:
     needs: create-release
     timeout-minutes: 180
     steps:
-      - name: Checkout code
+      - name: ⤵️ Checkout code
         uses: actions/checkout@v3
 
-      - name: Make build.sh executable
+      - name: 🔧 Make build.sh executable
         run: chmod +x ./build
 
-      - name: Run build for AMD64
+      - name: 💻 Run build for AMD64
         run: ./build
 
       - name: Locate the .deb file
-        id: locate_deb
+        id: 📂 locate_deb
         run: |
           DEB_FILE=$(find ./parquetify -name "parquetify_*_amd64.deb")
           echo "DEB_FILE=$DEB_FILE"
           echo "::set-output name=deb_file::$DEB_FILE"
 
-      - name: Upload .deb to GitHub Releases
+      - name: ⬆️ Upload .deb to GitHub Releases
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,23 +63,23 @@ jobs:
     needs: create-release
     timeout-minutes: 180
     steps:
-      - name: Checkout code
+      - name: ⤵️ Checkout code
         uses: actions/checkout@v3
 
-      - name: Make build.sh executable
+      - name: 🔧 Make build.sh executable
         run: chmod +x ./build
 
-      - name: Run build for ARM
+      - name: 💻 Run build for ARM
         run: ./build arm
 
-      - name: Locate the .deb file
+      - name: 📂 Locate the .deb file
         id: locate_deb
         run: |
           DEB_FILE=$(find ./parquetify -name "parquetify_*_arm64.deb")
           echo "DEB_FILE=$DEB_FILE"
           echo "::set-output name=deb_file::$DEB_FILE"
 
-      - name: Upload .deb to GitHub Releases
+      - name: ⬆️ Upload .deb to GitHub Releases
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
