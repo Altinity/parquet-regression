@@ -59,7 +59,7 @@ jobs:
           asset_content_type: application/x-debian-package
 
   build-deb-arm:
-    name: 🛠 Build DEB for ARM
+    name: 🛠 Build .deb for ARM
     runs-on: [self-hosted, on-demand, type-cax41, image-arm-app-docker-ce]
     needs: create-release
     timeout-minutes: 180
