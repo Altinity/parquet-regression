@@ -41,8 +41,8 @@ jobs:
       - name: 💻 Run build for AMD64
         run: ./build
 
-      - name: Locate the .deb file
-        id: 📂 locate_deb
+      - name: 📂 Locate the .deb file
+        id: locate_deb
         run: |
           DEB_FILE=$(find ./parquetify -name "parquetify_*_amd64.deb")
           echo "DEB_FILE=$DEB_FILE"
