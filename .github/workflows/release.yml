@@ -24,6 +24,7 @@ jobs:
           release_name: Release ${{ github.event.inputs.version }}
           draft: false
           prerelease: false
+          body_path: ${{ github.workspace }}/release-notes/${{ inputs.version }}.md
 
   build-deb-amd64:
     name: 🛠 Build .deb for AMD64
