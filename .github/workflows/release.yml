@@ -57,7 +57,7 @@ jobs:
           asset_name: parquetify_${{ github.event.inputs.version }}_amd64.deb
           asset_content_type: application/x-debian-package
 
-  build-deb-arm64:
+  build-deb-arm:
     name: 🛠 Build DEB for ARM
     runs-on: [self-hosted, on-demand, type-cax41, image-arm-app-docker-ce]
     needs: create-release
@@ -69,13 +69,13 @@ jobs:
       - name: Make build.sh executable
         run: chmod +x ./build
 
-      - name: Run build for ARM64
+      - name: Run build for ARM
         run: ./build arm
 
       - name: Locate the .deb file
         id: locate_deb
         run: |
-          DEB_FILE=$(find ./parquetify -name "parquetify_*_arm.deb")
+          DEB_FILE=$(find ./parquetify -name "parquetify_*_arm64.deb")
           echo "DEB_FILE=$DEB_FILE"
           echo "::set-output name=deb_file::$DEB_FILE"
 
