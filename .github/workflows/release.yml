@@ -1,14 +1,15 @@
-name: Release
+name: 🚀 Release
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version of the release'
+        description: '📝 Version of the release'
         required: true
 
 jobs:
   create-release:
+    name: 📦 Create Release
     runs-on: [self-hosted, on-demand, type-cpx41, image-x86-app-docker-ce]
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -25,6 +26,7 @@ jobs:
           prerelease: false
 
   build-deb-amd64:
+    name: 🛠 Build .deb for AMD64
     runs-on: [self-hosted, on-demand, type-cpx41, image-x86-app-docker-ce]
     needs: create-release
     timeout-minutes: 180
@@ -56,6 +58,7 @@ jobs:
           asset_content_type: application/x-debian-package
 
   build-deb-arm64:
+    name: 🛠 Build DEB for ARM
     runs-on: [self-hosted, on-demand, type-cax41, image-arm-app-docker-ce]
     needs: create-release
     timeout-minutes: 180
@@ -72,7 +75,7 @@ jobs:
       - name: Locate the .deb file
         id: locate_deb
         run: |
-          DEB_FILE=$(find ./parquetify -name "parquetify_*_arm64.deb")
+          DEB_FILE=$(find ./parquetify -name "parquetify_*_arm.deb")
           echo "DEB_FILE=$DEB_FILE"
           echo "::set-output name=deb_file::$DEB_FILE"
 
@@ -83,5 +86,5 @@ jobs:
         with:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
           asset_path: ${{ steps.locate_deb.outputs.deb_file }}
-          asset_name: parquetify_${{ github.event.inputs.version }}_arm64.deb
+          asset_name: parquetify_${{ github.event.inputs.version }}_arm.deb
           asset_content_type: application/x-debian-package
