@@ -28,7 +28,7 @@
 # 📝 Table of Contents
 
 - 💾 [Installation](#-installation) 
-- 🚀 [Creating Parquet File](#%EF%B8%8F-creating-parquet-file)
+- 🚀 [Creating Parquet File](#-creating-parquet-file)
 - 📐 [JSON Schema](#-json-schema)
 - 📘 [JSON File Definition](#-json-file-definition)
    - [Regular Types](#regular-types)
