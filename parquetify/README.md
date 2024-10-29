@@ -22,7 +22,7 @@
 # 📝 Table of Contents
 
 - [Installation](#-installation) 
-- [Create Parquet File](#-create-parquet-file)
+- [Create Parquet File](#%EF%B8%8F-create-parquet-file)
 - [JSON File Definition](#-json-file-definition)
    - [Regular Types](#regular-types)
    - [Nested Types](#nested-types)
