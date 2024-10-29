@@ -1,6 +1,7 @@
 <img align=right style="width: 5em;" src="https://github.com/user-attachments/assets/1e97270f-7925-4cc2-8791-8d0cc77fe512">
 
-<br>
+[![License](http://img.shields.io/:license-apache%202.0-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Release](https://github.com/Altinity/parquet-regression/actions/workflows/release.yml/badge.svg)](https://github.com/Altinity/parquet-regression/actions/workflows/release.yml)
 
 # 🧩 Parquetify
 
