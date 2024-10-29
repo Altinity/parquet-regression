@@ -7,7 +7,7 @@
 
 This project is designated for testing Parquet file format. It includes tests and tools for generating and validating Parquet files.
 
-## 📊 Parquetify
+## 🧩 Parquetify
 
 * [Parquetify](https://github.com/Altinity/parquet-regression/tree/main/parquetify) provides functionality for generating Parquet files from JSON file definitions.
 
