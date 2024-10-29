@@ -1,8 +1,14 @@
+<img align=right style="width:10em;" src="https://github.com/user-attachments/assets/afce991a-3f2e-4847-857d-f46f4bb60f9e">
+
+<br><br><br><br>
+
 # 🧩 Parquetify
 
 **Parquetify** is a lightweight tool leveraging the [parquet-java](https://github.com/apache/parquet-java) library to generate [Apache Parquet](https://parquet.apache.org/) files based on the file definition provided in a JSON file.
 
-![parquetify-ezgif com-optimize](https://github.com/user-attachments/assets/f63888b6-59db-46ce-9d75-c17fd88833d1)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f63888b6-59db-46ce-9d75-c17fd88833d1">
+</p>
 
 # 🌟 Features
 
