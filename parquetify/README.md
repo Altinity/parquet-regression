@@ -27,12 +27,13 @@
 
 # 📝 Table of Contents
 
-- [Installation](#-installation) 
-- [Create Parquet File](#%EF%B8%8F-create-parquet-file)
-- [JSON File Definition](#-json-file-definition)
+- 💾 [Installation](#-installation) 
+- ⚙️ [Create Parquet File](#%EF%B8%8F-create-parquet-file)
+- 📐 [JSON Schema](#-json-schema)
+- 📘 [JSON File Definition](#-json-file-definition)
    - [Regular Types](#regular-types)
    - [Nested Types](#nested-types)
-- [Missing Functionality](#-missing-functionality)
+- 🚧 [Missing Functionality](#-missing-functionality)
 
 ---
 
@@ -82,9 +83,13 @@ parquetify -j example.json -o /path/to/output/file.parquet
 
 ---
 
-# 📝 [JSON File Definition](#table-of-contents)
+# 📐 [JSON Schema](#table-of-contents)
 
-Parquetify uses a JSON schema to define the file structure and values that will populate your Parquet file. The schema follows a specific format, which is outlined [here](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json).
+Parquetify uses a pre-defined JSON schema that defines the format of the JSON object which specifies structure and values to populate your Parquet file.
+
+You can find the full schema at [parquetify/src/schema-example/json/schema.json](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json).
+
+# 📘 [JSON File Definition](#table-of-contents)
 
 A simple JSON structure looks like:
 
