@@ -354,6 +354,10 @@ public class GenerateParquet {
     private static void insertDataIntoGroup(Group group, JSONArray schemaArray, int rowIndex) {
         for (int i = 0; i < schemaArray.length(); i++) {
             JSONObject field = schemaArray.getJSONObject(i);
+            String fieldPhysicalType = field.optString("physicalType", null);
+            String fieldLogicalType = field.optString("logicalType", "NONE");
+
+
             if (!field.has("data")) {
                 // Handle nested groups
                 String name = field.getString("name");
@@ -365,19 +369,40 @@ public class GenerateParquet {
                     JSONObject nestedField = fields.getJSONObject(j);
                     String nestedFieldName = nestedField.getString("name");
                     Object nestedValue = groupData.get(nestedFieldName);
-                    appendValueToGroup(nestedGroup, nestedFieldName, nestedValue);
+                    boolean isUUID = false;
+
+                    if ("INT64".equals(fieldPhysicalType)) {
+                        nestedValue = ((Number) nestedValue).longValue();
+                    }
+
+
+                    if ((fieldLogicalType).equalsIgnoreCase("uuid")) {
+                        isUUID = true;
+                    }
+
+                    appendValueToGroup(nestedGroup, nestedFieldName, nestedValue, isUUID);
                 }
             } else {
                 String name = field.getString("name");
                 JSONArray dataArray = field.getJSONArray("data");
                 Object value = dataArray.get(rowIndex);
-                appendValueToGroup(group, name, value);
+                boolean isUUID = false;
+
+                if ("INT64".equals(fieldPhysicalType)) {
+                    value = ((Number) value).longValue();
+                }
+
+                if ((fieldLogicalType).equalsIgnoreCase("uuid")) {
+                    isUUID = true;
+                }
+
+                appendValueToGroup(group, name, value, isUUID);
             }
         }
     }
 
 
-    private static void appendValueToGroup(Group group, String name, Object value) {
+    private static void appendValueToGroup(Group group, String name, Object value, Boolean isUUID) {
         try {
             if (value instanceof Integer) {
                 group.add(name, (Integer) value);
@@ -385,7 +410,7 @@ public class GenerateParquet {
                 group.add(name, (Long) value);
             } else if (value instanceof String) {
                 // Handle UUID string by converting to 16-byte array if the field is UUID
-                if (isUUID(name)) {
+                if (isUUID) {
                     byte[] uuidBytes = hexStringToByteArray((String) value);
                     group.add(name, Binary.fromConstantByteArray(uuidBytes));
                 } else {
@@ -408,7 +433,7 @@ public class GenerateParquet {
                 JSONObject jsonObject = (JSONObject) value;
                 for (String key : jsonObject.keySet()) {
                     Object nestedValue = jsonObject.get(key);
-                    appendValueToGroup(nestedGroup, key, nestedValue);
+                    appendValueToGroup(nestedGroup, key, nestedValue, isUUID);
                 }
             } else {
                 throw new IllegalArgumentException("Unsupported data type: " + value.getClass().getName());
@@ -416,13 +441,6 @@ public class GenerateParquet {
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Error adding value to group. Value type mismatch for column: " + name, e);
         }
-    }
-
-
-    private static boolean isUUID(String fieldName) {
-        // We add logic to identify if a particular field is a UUID
-        // For simplicity, let's assume field names ending with '_uuid' indicate UUID
-        return fieldName.toLowerCase().contains("uuid");
     }
 
     private static byte[] hexStringToByteArray(String s) {
