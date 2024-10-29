@@ -37,7 +37,7 @@
 
 ---
 
-# 💾 [Installation](#table-of-contents)
+# 💾 [Installation](#-table-of-contents)
 
 1. Download the latest release from the [Releases](https://github.com/Altinity/parquet-regression/releases):
 
@@ -71,7 +71,7 @@
 
 ---    
 
-# 🚀 [Creating Parquet File](#table-of-contents)
+# 🚀 [Creating Parquet File](#-table-of-contents)
 
 To generate your first Parquet file, use the provided example JSON available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
 
@@ -83,13 +83,13 @@ parquetify -j example.json -o /path/to/output/file.parquet
 
 ---
 
-# 📐 [JSON Schema](#table-of-contents)
+# 📐 [JSON Schema](#-table-of-contents)
 
 Parquetify uses a pre-defined JSON schema that defines the format of the JSON object which specifies structure and values to populate your Parquet file.
 
 You can find the full schema at [parquetify/src/schema-example/json/schema.json](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json).
 
-# 📘 [JSON File Definition](#table-of-contents)
+# 📘 [JSON File Definition](#-table-of-contents)
 
 A simple JSON structure looks like:
 
@@ -139,7 +139,7 @@ A simple JSON structure looks like:
 }
 ```
 
-## [Regular Types](#table-of-contents)
+## [Regular Types](#-table-of-contents)
 
 A typical example for handling a simple column type (`INT32`) looks like this:
 
@@ -159,7 +159,7 @@ A typical example for handling a simple column type (`INT32`) looks like this:
 - `logicalType`: Defines the logical type for better data interpretation.
 - `data`: An array of values to populate the column.
 
-## [Nested Types](#table-of-contents)
+## [Nested Types](#-table-of-contents)
 
 You can define nested types as follows:
 
@@ -198,7 +198,7 @@ You can define nested types as follows:
 
 ---
 
-# 🚧 [Missing Functionality](#table-of-contents)
+# 🚧 [Missing Functionality](#-table-of-contents)
 
 - Additional encodings (`DELTA_BYTE_ARRAY`, `DELTA_LENGTH_BYTE_ARRAY`, `RLE`, etc.)
 - Data insertion into `FLOAT16` columns (planned for next release)
