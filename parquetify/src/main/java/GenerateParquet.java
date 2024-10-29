@@ -435,6 +435,21 @@ public class GenerateParquet {
                     Object nestedValue = jsonObject.get(key);
                     appendValueToGroup(nestedGroup, key, nestedValue, isUUID);
                 }
+            } else if (value instanceof JSONArray) {
+                JSONArray jsonArray = (JSONArray) value;
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    Object arrayValue = jsonArray.get(i);
+                    if (arrayValue instanceof JSONObject) {
+                        JSONObject keyValue = (JSONObject) arrayValue;
+                        Group keyValueGroup = group.addGroup(name);
+                        for (String key : keyValue.keySet()) {
+                            Object nestedValue = keyValue.get(key);
+                            appendValueToGroup(keyValueGroup, key, nestedValue, isUUID);
+                        }
+                    } else {
+                        appendValueToGroup(group.addGroup(name), "element", arrayValue, isUUID);
+                    }
+                }
             } else {
                 throw new IllegalArgumentException("Unsupported data type: " + value.getClass().getName());
             }
