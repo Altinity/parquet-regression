@@ -1,6 +1,6 @@
-# 🚀 Parquetify: Generate Parquet Files from JSON
+# 🧩 Parquetify: Generate Parquet Files from JSON
 
-**Parquetify** is a lightweight tool leveraging the [parquet-java](https://github.com/apache/parquet-java) library to generate Parquet files based on the file definition provided in a JSON file.
+**Parquetify** is a lightweight tool leveraging the [parquet-java](https://github.com/apache/parquet-java) library to generate [Apache Parquet](https://parquet.apache.org/) files based on the file definition provided in a JSON file.
 
 ![parquetify-ezgif com-optimize](https://github.com/user-attachments/assets/f63888b6-59db-46ce-9d75-c17fd88833d1)
 
@@ -64,7 +64,7 @@
 
 ---    
 
-# 🧩 [Create Parquet File](#table-of-contents)
+# 🛠️ [Create Parquet File](#table-of-contents)
 
 To generate your first Parquet file, use the provided example JSON available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
 
