@@ -2,7 +2,7 @@
 
 **Parquetify** is a lightweight tool leveraging the [parquet-java](https://github.com/apache/parquet-java) library to generate Parquet files based on the file definition provided in a JSON file.
 
-![Peek 2024-10-24 17-24](https://github.com/user-attachments/assets/3964e12a-1d62-4a0d-8544-30581d2ca8f9)
+![parquetify-ezgif com-optimize](https://github.com/user-attachments/assets/f63888b6-59db-46ce-9d75-c17fd88833d1)
 
 # 🌟 Features
 
