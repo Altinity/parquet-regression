@@ -1,6 +1,6 @@
-<img align=right style="width:10em;" src="https://github.com/user-attachments/assets/afce991a-3f2e-4847-857d-f46f4bb60f9e">
+<img align=right style="width:6em;" src="https://github.com/user-attachments/assets/afce991a-3f2e-4847-857d-f46f4bb60f9e">
 
-<br><br><br><br>
+<br>
 
 # 🧩 Parquetify
 
