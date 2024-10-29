@@ -39,7 +39,7 @@
     wget https://github.com/Altinity/parquet-regression/releases/download/1.0.3/parquetify_1.0.3_amd64.deb
     ```
     
-    💡 **Note:** Ensure that you download the package corresponding to your system architecture. Both ARM and x86_64 are supported.
+    💡 **Note:** Ensure that you download the package corresponding to your system architecture. Both **ARM** and **x86_64** are supported.
 
 2. Install the `.deb` package:
 
