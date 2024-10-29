@@ -28,7 +28,7 @@
 # 📝 Table of Contents
 
 - 💾 [Installation](#-installation) 
-- ⚙️ [Creating Parquet File](#%EF%B8%8F-creating-parquet-file)
+- 🚀 [Creating Parquet File](#%EF%B8%8F-creating-parquet-file)
 - 📐 [JSON Schema](#-json-schema)
 - 📘 [JSON File Definition](#-json-file-definition)
    - [Regular Types](#regular-types)
@@ -71,7 +71,7 @@
 
 ---    
 
-# ⚙️ [Creating Parquet File](#table-of-contents)
+# 🚀 [Creating Parquet File](#table-of-contents)
 
 To generate your first Parquet file, use the provided example JSON available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
 
