@@ -15,14 +15,18 @@
 | **Writer Version:** | Specify writer version (`1.0`, `2.0`). |
 | **Customizable Sizes:** | Set specific row group and page sizes. |
 
+---
+
 # 📝 Table of Contents
 
-- [Installation](#installation) 
-- [Create Parquet File](#create-parquet-file)
-- [JSON File Definition](#json-file-definition)
+- [Installation](#-installation) 
+- [Create Parquet File](#-create-parquet-file)
+- [JSON File Definition](#-json-file-definition)
    - [Regular Types](#regular-types)
    - [Nested Types](#nested-types)
-- [Missing Functionality](#missing-functionality)
+- [Missing Functionality](#-missing-functionality)
+
+---
 
 # 💾 [Installation](#table-of-contents)
 
@@ -56,6 +60,8 @@
      -o,--output <arg>   Output path for the Parquet file
     ```
 
+---    
+
 # 🧩 [Create Parquet File](#table-of-contents)
 
 To generate your first Parquet file, use the provided example JSON available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
@@ -68,7 +74,9 @@ parquetify -j example.json -o /path/to/output/file.parquet
 > [!WARNING]
 > Parquetify allows you to specify any structure, including incorrect ones. If the structure is invalid, the Parquet file may be generated, but it may not be readable by tools or databases.
 
-# [JSON File Definition](#table-of-contents)
+---
+
+# 📝 [JSON File Definition](#table-of-contents)
 
 Parquetify uses a JSON schema to define the file structure and values that will populate your Parquet file. The schema follows a specific format, which is outlined [here](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json).
 
@@ -177,7 +185,9 @@ You can define nested types as follows:
 - `repeatedGroup`: Defines an array of objects.
 - `requiredGroup` and `optionalGroup`: Define tuple-like structures.
 
-## [Missing Functionality](#table-of-contents)
+---
+
+# 🌱 [Missing Functionality](#table-of-contents)
 
 - Additional encodings (`DELTA_BYTE_ARRAY`, `DELTA_LENGTH_BYTE_ARRAY`, `RLE`, etc.)
 - Data insertion into `FLOAT16` columns (planned for next release)
