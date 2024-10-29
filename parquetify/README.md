@@ -64,7 +64,7 @@
 
 ---    
 
-# 🛠️ [Create Parquet File](#table-of-contents)
+# ⚙️ [Create Parquet File](#table-of-contents)
 
 To generate your first Parquet file, use the provided example JSON available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
 
