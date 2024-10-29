@@ -32,7 +32,7 @@
 
 # 💾 [Installation](#table-of-contents)
 
-1. Download the latest release from the [Releases page](https://github.com/Altinity/parquet-regression/releases):
+1. Download the latest release from the [Releases](https://github.com/Altinity/parquet-regression/releases):
 
     ```
     sudo apt update
