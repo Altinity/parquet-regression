@@ -187,7 +187,7 @@ You can define nested types as follows:
 
 ---
 
-# 🌱 [Missing Functionality](#table-of-contents)
+# 🚧 [Missing Functionality](#table-of-contents)
 
 - Additional encodings (`DELTA_BYTE_ARRAY`, `DELTA_LENGTH_BYTE_ARRAY`, `RLE`, etc.)
 - Data insertion into `FLOAT16` columns (planned for next release)
