@@ -1,76 +1,82 @@
-# Parquetify: Generate Parquet Files from JSON
+# 🧩 Parquetify
 
-Parquetify is a lightweight tool leveraging the [parquet-java](https://github.com/apache/parquet-java) library to generate Parquet files based on the structure provided in a JSON file.
+**Parquetify** is a lightweight tool leveraging the [parquet-java](https://github.com/apache/parquet-java) library to generate [Apache Parquet](https://parquet.apache.org/) files based on the file definition provided in a JSON file.
 
-## Features
+![parquetify-ezgif com-optimize](https://github.com/user-attachments/assets/f63888b6-59db-46ce-9d75-c17fd88833d1)
 
-- **Physical Data Types:** Customize the physical data types for your Parquet files.
-- **Logical Data Types:** Support for a wide range of logical types.
-- **Precision & Scale:** Define precision and scale for `DECIMAL` types.
-- **Compression:** Choose from `SNAPPY`, `ZSTD`, or `UNCOMPRESSED`.
-- **Encodings:** Includes `DICTIONARY`, `BYTE_STREAM_SPLIT`, and `PLAIN`.
-- **Bloom Filter:** Apply a bloom filter to specific columns or all columns (including those within groups).
-- **Writer Version:** Specify writer version (`1.0`, `2.0`).
-- **Customizable Sizes:** Set specific row group and page sizes.
+# 🌟 Features
 
-## Table of Contents
+| Feature | Description |
+|---|---|
+| **Physical Data Types:** | All physical data types: `INT32`, `INT64`, `BOOLEAN`, `FLOAT`, `DOUBLE`, `BINARY`, `FIXED_LEN_BYTE_ARRAY`. |
+| **Logical Data Types:** | Most logical types (except for `FLOAT16`): `UTF8`, `DECIMAL`, `DATE`, `TIME_MILLIS`, `TIME_MICROS`, `TIMESTAMP_MILLIS`, `TIMESTAMP_MICROS`, `ENUM`, `NONE`, `MAP`, `LIST`, `STRING`, `MAP_KEY_VALUE`, `TIME`, `INTEGER`, `JSON`, `BSON`, `UUID`, `INTERVAL`, `UINT_8`, `UINT_16`, `UINT_32`, `UINT_64`, `INT_8`, `INT_16`, `INT_32`, `INT_64` |
+| **Precision & Scale:** | Precision and scale for `DECIMAL` types. |
+| **Compression:** | `NONE`, `SNAPPY`, `GZIP`, `LZO`, `BROTLI`, `LZ4`, `ZSTD`. |
+| **Encodings:** | Automatically set by the writer for a given column. |
+| **Bloom Filter:** | Apply a bloom filter to specific columns or all columns (including those within groups). |
+| **Writer Version:** | Specify writer version (`1.0`, `2.0`). |
+| **Customizable Sizes:** | Row group and page sizes. |
 
-- [Quick Start](#quick-start)
-    - [Installation](#installation) 
-    - [Creating Your First Parquet File](#creating-your-first-parquet-file)
-    - [Building JSON for Parquetify](#building-json-for-parquetify)
-        - [Handling Regular Types](#handling-regular-types)
-        - [Handling Nested Types](#handling-nested-types)
-- [Missing Functionality](#missing-functionality)
+---
 
-## [Quick Start](#table-of-contents)
+# 📝 Table of Contents
 
-To get started with Parquetify, download the latest release from the [Releases page](https://github.com/Altinity/parquet-regression/releases):
+- [Installation](#-installation) 
+- [Create Parquet File](#%EF%B8%8F-create-parquet-file)
+- [JSON File Definition](#-json-file-definition)
+   - [Regular Types](#regular-types)
+   - [Nested Types](#nested-types)
+- [Missing Functionality](#-missing-functionality)
 
-### [Installation](#table-of-contents)
+---
 
-```bash
-sudo apt update
-wget https://github.com/Altinity/parquet-regression/releases/download/1.0.3/parquetify_1.0.3_amd64.deb
-```
+# 💾 [Installation](#table-of-contents)
 
-> [!NOTE] 
-> Ensure that you download the package corresponding to your system architecture. Both ARM and x86_64 are supported.
+1. Download the latest release from the [Releases](https://github.com/Altinity/parquet-regression/releases):
 
-Install the `.deb` package:
+    ```
+    sudo apt update
+    wget https://github.com/Altinity/parquet-regression/releases/download/1.0.3/parquetify_1.0.3_amd64.deb
+    ```
+    
+    💡 **Note:** Ensure that you download the package corresponding to your system architecture. Both **ARM** and **x86_64** are supported.
 
-```bash
-sudo apt install ./parquetify_1.0.3_amd64.deb
-```
+2. Install the `.deb` package:
 
-To confirm the installation, run the following command:
+    ```bash
+    sudo apt install ./parquetify_1.0.3_amd64.deb
+    ```
 
-```bash
-parquetify
-```
+3. Confirm the installation, run the following command:
 
-If successful, you will see usage instructions like:
+    ```bash
+    parquetify
+    ```
+    
+    If successful, you will see usage instructions like:
+    
+    ```bash
+    Error parsing command line arguments: Missing required options: j, o
+    usage: GenerateParquet
+     -j,--json <arg>     Path to the JSON file
+     -o,--output <arg>   Output path for the Parquet file
+    ```
 
-```bash
-Error parsing command line arguments: Missing required options: j, o
-usage: GenerateParquet
- -j,--json <arg>     Path to the JSON file
- -o,--output <arg>   Output path for the Parquet file
-```
+---    
 
-### [Creating Your First Parquet File](#table-of-contents)
+# ⚙️ [Create Parquet File](#table-of-contents)
 
 To generate your first Parquet file, use the provided example JSON available in our [schema-example folder](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/example.json):
 
 ```bash
 parquetify -j example.json -o /path/to/output/file.parquet
 ```
-![Peek 2024-10-24 17-24](https://github.com/user-attachments/assets/3964e12a-1d62-4a0d-8544-30581d2ca8f9)
-
 > [!WARNING]
 > Parquetify allows you to specify any structure, including incorrect ones. If the structure is invalid, the Parquet file may be generated, but it may not be readable by tools or databases.
 
-### [Building JSON for Parquetify](#table-of-contents)
+---
+
+# 📝 [JSON File Definition](#table-of-contents)
 
 Parquetify uses a JSON schema to define the file structure and values that will populate your Parquet file. The schema follows a specific format, which is outlined [here](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json).
 
@@ -122,7 +128,7 @@ A simple JSON structure looks like:
 }
 ```
 
-### [Handling Regular Types](#table-of-contents)
+## [Regular Types](#table-of-contents)
 
 A typical example for handling a simple column type (`INT32`) looks like this:
 
@@ -142,7 +148,7 @@ A typical example for handling a simple column type (`INT32`) looks like this:
 - `logicalType`: Defines the logical type for better data interpretation.
 - `data`: An array of values to populate the column.
 
-### [Handling Nested Types](#table-of-contents)
+## [Nested Types](#table-of-contents)
 
 You can define nested types as follows:
 
@@ -179,7 +185,9 @@ You can define nested types as follows:
 - `repeatedGroup`: Defines an array of objects.
 - `requiredGroup` and `optionalGroup`: Define tuple-like structures.
 
-## [Missing Functionality](#table-of-contents)
+---
+
+# 🌱 [Missing Functionality](#table-of-contents)
 
 - Additional encodings (`DELTA_BYTE_ARRAY`, `DELTA_LENGTH_BYTE_ARRAY`, `RLE`, etc.)
 - Data insertion into `FLOAT16` columns (planned for next release)
