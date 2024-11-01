@@ -203,5 +203,5 @@ You can define nested types as follows:
 
 - [Specifying encodings](https://github.com/Altinity/parquet-regression/issues/2)
 - [Data insertion into `FLOAT16` columns](https://github.com/Altinity/parquet-regression/issues/3) (planned for next release)
-- (Parquet encryption)[https://github.com/Altinity/parquet-regression/issues/4]
+- [Parquet encryption](https://github.com/Altinity/parquet-regression/issues/4)
 
