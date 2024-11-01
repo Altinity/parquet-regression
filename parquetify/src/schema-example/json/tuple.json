@@ -1,0 +1,38 @@
+{
+  "fileName": "tuple_examples.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "GZIP",
+    "rowGroupSize": 256,
+    "pageSize": 1024
+  },
+  "schema": [
+    {
+      "name": "person",
+      "schemaType": "requiredGroup",
+      "fields": [
+        {
+          "name": "name",
+          "schemaType": "optional",
+          "physicalType": "BINARY",
+          "logicalType": "STRING"
+        },
+        {
+          "name": "age",
+          "schemaType": "required",
+          "physicalType": "INT32"
+        }
+      ],
+      "data": [
+        {
+          "name": "Alice",
+          "age": 30
+        },
+        {
+          "name": "Bob",
+          "age": 25
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "fileName": "nested_array_examples.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "GZIP",
+    "rowGroupSize": 256,
+    "pageSize": 1024
+  },
+  "schema": [
+    {
+      "name": "attributes",
+      "schemaType": "optionalGroup",
+      "logicalType": "INT32",
+      "fields": [
+        {
+          "name": "key_value",
+          "schemaType": "repeatedGroup",
+          "fields": [
+            {
+              "name": "key",
+              "schemaType": "required",
+              "physicalType": "BINARY",
+              "logicalType": "STRING"
+            },
+            {
+              "name": "value",
+              "schemaType": "optional",
+              "physicalType": "BINARY",
+              "logicalType": "STRING"
+            }
+          ]
+        }
+      ],
+      "data": [{"key_value": [{"key": "tqwqmcqvqo", "value": "gkqcl"}]}]
+    }
+  ]
+}
