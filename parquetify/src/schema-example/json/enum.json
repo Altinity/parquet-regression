@@ -1,5 +1,5 @@
 {
-  "fileName": "string_examples.parquet",
+  "fileName": "enum_examples.parquet",
   "options": {
     "writerVersion": "1.0",
     "compression": "GZIP",
@@ -8,11 +8,11 @@
   },
   "schema": [
     {
-      "name": "string_field",
+      "name": "enum_field",
       "schemaType": "required",
       "physicalType": "BINARY",
-      "logicalType": "STRING",
-      "data": ["one", "two", "three", "four", "five"]
+      "logicalType": "ENUM",
+      "data": ["a", "b", "c", "d", "e"]
     }
   ]
 }
