@@ -84,25 +84,109 @@ parquetify -j example.json -o /path/to/output/file.parquet
 
 ---
 
-# 📐 [JSON Schema](#-table-of-contents)
+# 📐 Parquet File Schema Documentation
 
-Parquetify uses a pre-defined JSON schema that defines the format of the JSON object which specifies structure and values to populate your Parquet file.
+This document provides guidelines for defining the structure and properties of a Parquet file using a JSON schema. This schema aligns with Parquet-Java API terms, supporting complex types, including nested values in MAP structures.
 
-You can find the full schema at [parquetify/src/schema-example/json/schema.json](https://github.com/Altinity/parquet-regression/blob/main/parquetify/src/schema-example/json/schema.json).
+## Overview
 
-# 📘 [JSON File Definition](#-table-of-contents)
+- **Schema Version**: Draft-07 JSON Schema
+- **Title**: Parquet File Schema
+- **Description**: Defines Parquet file configuration with options for file metadata, writer settings, and column definitions.
 
-A simple JSON structure looks like:
+## Fields
+
+### 1. File Definition
+
+- **`fileName`** (string, required):  
+  Specifies the name of the output Parquet file.
+  
+### 2. Writer Options
+
+Contains additional options for configuring the Parquet writer.
+
+- **`writerVersion`** (string):  
+  Version of the Parquet writer. Defaults to `"1.0"`.
+  - Options: `"1.0"`, `"2.0"`
+
+- **`compression`** (string):  
+  Compression codec to use. Defaults to `"SNAPPY"`.
+  - Options: `"NONE"`, `"SNAPPY"`, `"GZIP"`, `"LZO"`, `"BROTLI"`, `"LZ4"`, `"ZSTD"`
+
+- **`rowGroupSize`** (integer):  
+  Size of row groups in bytes. Defaults to `134217728`.
+
+- **`pageSize`** (integer):  
+  Page size in bytes. Defaults to `1048576`.
+
+- **`bloomFilter`** (string):  
+  Bloom filter algorithm for columns. Defaults to `"none"`.
+  - Options: `"none"`, `"all"`, `["column1", "column2"]` (specific columns)
+
+### 3. Schema Definition
+
+Defines the structure and properties of each column in the Parquet file. It includes column data types, nesting, and complex structures such as MAP.
+
+- **`name`** (string, required):  
+  Name of the column.
+
+- **`schemaType`** (string, required):  
+  Schema type for the column, aligning with Parquet-Java API.
+  - Options: `"optional"`, `"required"`, `"repeated"`, `"optionalGroup"`, `"requiredGroup"`, `"repeatedGroup"`
+
+- **`physicalType`** (string):  
+  Physical data type of the column.
+  - Options: `"INT32"`, `"INT64"`, `"BOOLEAN"`, `"FLOAT"`, `"DOUBLE"`, `"BINARY"`, `"FIXED_LEN_BYTE_ARRAY"`
+
+- **`logicalType`** (string):  
+  Logical data type, aligning with Parquet-Java OriginalType.
+  - Options: `"UTF8"`, `"DECIMAL"`, `"DATE"`, `"TIME_MILLIS"`, `"TIME_MICROS"`, `"TIMESTAMP_MILLIS"`, `"TIMESTAMP_MICROS"`, `"ENUM"`, `"NONE"`, `"MAP"`, `"LIST"`, `"STRING"`, `"MAP_KEY_VALUE"`, `"TIME"`, `"INTEGER"`, `"JSON"`, `"BSON"`, `"UUID"`, `"INTERVAL"`, `"FLOAT16"`, `"UINT8"`, `"UINT16"`, `"UINT32"`, `"UINT64"`, `"INT8"`, `"INT16"`, `"INT32"`, `"INT64"`
+
+#### Numeric Type Specifications
+
+These properties are relevant for the `DECIMAL` logical type or `FIXED_LEN_BYTE_ARRAY` physical type:
+
+- **`precision`** (integer):  
+  Precision for `DECIMAL`. Minimum value is 1.
+  
+- **`scale`** (integer):  
+  Scale for `DECIMAL`. Minimum value is 0.
+
+- **`length`** (integer):  
+  Length for `FIXED_LEN_BYTE_ARRAY`. Minimum value is 1.
+
+#### Nested Fields and Complex Types
+
+Defines nested structures or fields for group types:
+
+- **`fields`** (array of objects):  
+  Additional fields for grouped or nested columns (used with `optionalGroup`, `requiredGroup`, or `repeatedGroup` types).
+
+#### MAP Column Key and Value Types
+
+If a column has a MAP type, key and value schemas are specified separately.
+
+- **`keyType`** (object):  
+  Schema for MAP key:
+  - **`physicalType`** (string): Physical type, options include `"INT32"`, `"INT64"`, `"BINARY"`.
+  - **`logicalType`** (string): Logical type, options are `"UTF8"` or `"NONE"`.
+
+- **`valueType`** (object):  
+  Schema for MAP value, supporting complex nested types:
+  - **`physicalType`** (string): Options include `"INT32"`, `"INT64"`, `"BINARY"`, `"BOOLEAN"`, `"FLOAT"`, `"DOUBLE"`, `"MAP"`, `"GROUP"`.
+  - **`logicalType`** (string): Options include `"UTF8"`, `"DECIMAL"`, `"NONE"`.
+  - **`fields`** (array of objects): Additional fields if `valueType` is a complex type, such as `GROUP` or nested `MAP`.
+
+### Example Usage
 
 ```json
 {
-  "fileName": "example_output.parquet",
+  "fileName": "example.parquet",
   "options": {
-    "writerVersion": "1.0",
-    "compression": "UNCOMPRESSED",
-    "rowGroupSize": "default",
-    "pageSize": "default",
-    "encodings": ["PLAIN"],
+    "writerVersion": "2.0",
+    "compression": "GZIP",
+    "rowGroupSize": 128000000,
+    "pageSize": 1024000,
     "bloomFilter": "all"
   },
   "schema": [
@@ -110,93 +194,23 @@ A simple JSON structure looks like:
       "name": "id",
       "schemaType": "required",
       "physicalType": "INT32",
-      "logicalType": "INT8",
-      "data": [1, 2, 3, 4, 5]
+      "logicalType": "INTEGER"
     },
     {
-      "name": "person",
-      "schemaType": "repeatedGroup",
+      "name": "data",
+      "schemaType": "optionalGroup",
       "fields": [
         {
-          "name": "name",
+          "name": "value",
           "schemaType": "optional",
           "physicalType": "BINARY",
-          "logicalType": "STRING"
-        },
-        {
-          "name": "age",
-          "schemaType": "required",
-          "physicalType": "INT32"
+          "logicalType": "UTF8"
         }
-      ],
-      "data": [
-        {
-          "name": "Alice",
-          "age": 30
-        }
-        ]
+      ]
     }
   ]
 }
 ```
-
-## [Regular Types](#-table-of-contents)
-
-A typical example for handling a simple column type (`INT32`) looks like this:
-
-```json
-{
-  "name": "id",
-  "schemaType": "required",
-  "physicalType": "INT32",
-  "logicalType": "INT8",
-  "data": [1, 2, 3, 4, 5]
-}
-```
-
-- `name`: Column name.
-- `schemaType`: Specifies whether the column allows null values (`required` means no null values).
-- `physicalType`: Defines the physical data type.
-- `logicalType`: Defines the logical type for better data interpretation.
-- `data`: An array of values to populate the column.
-
-## [Nested Types](#-table-of-contents)
-
-You can define nested types as follows:
-
-```json
-{
-  "name": "person",
-  "schemaType": "repeatedGroup",
-  "fields": [
-    {
-      "name": "name",
-      "schemaType": "optional",
-      "physicalType": "BINARY",
-      "logicalType": "STRING"
-    },
-    {
-      "name": "age",
-      "schemaType": "required",
-      "physicalType": "INT32"
-    }
-  ],
-  "data": [
-    {
-      "name": "Alice",
-      "age": 30
-    },
-    {
-      "name": "Bob",
-      "age": 25
-    }
-  ]
-}
-```
-
-- `repeatedGroup`: Defines an array of objects.
-- `requiredGroup` and `optionalGroup`: Define tuple-like structures.
-
 ---
 
 # 🚧 [Missing Functionality](#-table-of-contents)
