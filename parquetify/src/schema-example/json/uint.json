@@ -1,0 +1,39 @@
+{
+  "fileName": "integer_examples.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "GZIP",
+    "rowGroupSize": 256,
+    "pageSize": 1024
+  },
+  "schema": [
+    {
+      "name": "int8",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "UINT8",
+      "data": [1, 2, 3, 4, 5]
+    },
+    {
+      "name": "int16",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "UINT16",
+      "data": [1, 2, 3, 4, 5]
+    },
+    {
+      "name": "int32",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "UINT32",
+      "data": [1, 2, 3, 4, 5]
+    },
+    {
+      "name": "int64",
+      "schemaType": "required",
+      "physicalType": "INT64",
+      "logicalType": "UINT64",
+      "data": [1, 2, 3, 4, 5]
+    }
+  ]
+}
