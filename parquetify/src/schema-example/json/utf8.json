@@ -12,7 +12,7 @@
       "schemaType": "required",
       "physicalType": "BINARY",
       "logicalType": "UTF8",
-      "data": ["one", "two", "three", "four", "five"]
+      "data": ["one", "two", "three", "four", "five", "\uD83D\uDCE6"]
     }
   ]
 }

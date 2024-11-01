@@ -1,0 +1,38 @@
+{
+  "fileName": "decimal_examples.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "GZIP",
+    "rowGroupSize": 256,
+    "pageSize": 1024
+  },
+  "schema": [
+    {
+      "name": "decimal_int32",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "DECIMAL",
+      "precision": 3,
+      "scale": 2,
+      "data": [123, 321, 424]
+    },
+    {
+      "name": "decimal_int64",
+      "schemaType": "required",
+      "physicalType": "INT64",
+      "logicalType": "DECIMAL",
+      "precision": 10,
+      "scale": 3,
+      "data": [2147483648, 2147483649, 2147483650]
+    },
+    {
+      "name": "decimal_binary",
+      "schemaType": "required",
+      "physicalType": "BINARY",
+      "logicalType": "DECIMAL",
+      "precision": 10,
+      "scale": 3,
+      "data": ["213", "421", "1234"]
+    }
+  ]
+}
