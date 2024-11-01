@@ -1,0 +1,80 @@
+{
+  "fileName": "example_output.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "snappy",
+    "rowGroupSize": "default",
+    "pageSize": "default",
+    "encodings": ["PLAIN"],
+    "bloomFilter": "all"
+},
+  "schema": [
+    {
+      "name": "id",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "INT8",
+      "data": [1, 2, 3, 4, 5]
+    },
+    {
+      "name": "id2",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "INT16",
+      "data": [1, 2, 3, 4, 5]
+    },
+    {
+      "name": "age",
+      "schemaType": "optional",
+      "physicalType": "INT32",
+      "logicalType": "INT32",
+      "data": [30, 25, 40, 35, 28]
+    },
+    {
+      "name": "name",
+      "schemaType": "optional",
+      "physicalType": "BINARY",
+      "logicalType": "STRING",
+      "data": ["Alice", "Bob", "Charlie", "David", "Eve"]
+    },
+    {
+      "name": "person",
+      "schemaType": "repeatedGroup",
+      "fields": [
+        {
+          "name": "name",
+          "schemaType": "optional",
+          "physicalType": "BINARY",
+          "logicalType": "STRING"
+        },
+        {
+          "name": "age",
+          "schemaType": "required",
+          "physicalType": "INT32"
+        }
+      ],
+      "data": [
+        {
+          "name": "Alice",
+          "age": 30
+        },
+        {
+          "name": "Bob",
+          "age": 25
+        },
+        {
+          "name": "Charlie",
+          "age": 40
+        },
+        {
+          "name": "David",
+          "age": 35
+        },
+        {
+          "name": "Eve",
+          "age": 28
+        }
+      ]
+    }
+  ]
+}
