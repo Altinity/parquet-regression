@@ -1,7 +1,7 @@
 {
   "fileName": "example_output.parquet",
   "options": {
-    "writerVersion": "1.0",
+    "writerVersion": "2.0",
     "compression": "snappy",
     "rowGroupSize": "default",
     "pageSize": "default",
