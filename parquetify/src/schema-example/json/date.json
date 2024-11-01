@@ -8,11 +8,11 @@
   },
   "schema": [
     {
-    "name": "date_field_int32",
-    "schemaType": "required",
-    "physicalType": "INT32",
-    "logicalType": "DATE",
-    "data": [18628]
+      "name": "date_field_int32",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "DATE",
+      "data": [18628]
     }
   ]
 }

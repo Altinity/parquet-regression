@@ -1,0 +1,18 @@
+{
+  "fileName": "string_examples.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "GZIP",
+    "rowGroupSize": 256,
+    "pageSize": 1024
+  },
+  "schema": [
+    {
+      "name": "binary_field",
+      "schemaType": "required",
+      "physicalType": "BINARY",
+      "logicalType": "STRING",
+      "data": ["one", "two", "three", "four", "five"]
+    }
+  ]
+}

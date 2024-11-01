@@ -1,0 +1,37 @@
+{
+  "fileName": "json_and_bson_examples.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "GZIP",
+    "rowGroupSize": 256,
+    "pageSize": 1024
+  },
+  "schema": [
+    {
+      "name": "json_field",
+      "schemaType": "optional",
+      "physicalType": "BINARY",
+      "logicalType": "JSON",
+      "data": [
+        "{\"key1\": \"value1\"}",
+        "{\"key2\": \"value2\"}",
+        "{\"key3\": \"value3\"}",
+        "{\"key4\": \"value4\"}",
+        "{\"key5\": \"value5\"}"
+      ]
+    },
+    {
+      "name": "bson_field",
+      "schemaType": "optional",
+      "physicalType": "BINARY",
+      "logicalType": "BSON",
+      "data": [
+        "{\"key1\": \"value1\"}",
+        "{\"key2\": \"value2\"}",
+        "{\"key3\": \"value3\"}",
+        "{\"key4\": \"value4\"}",
+        "{\"key5\": \"value5\"}"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "fileName": "time_examples.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "GZIP",
+    "rowGroupSize": 256,
+    "pageSize": 1024
+  },
+  "schema": [
+    {
+      "name": "time_millis_field",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "TIME_MILLIS",
+      "data": [12345678, 23456789, 34567890, 45678901, 56789012]
+    },
+    {
+      "name": "time_micros_field",
+      "schemaType": "required",
+      "physicalType": "INT64",
+      "logicalType": "TIME_MICROS",
+      "data": [123456789012, 234567890123, 345678901234, 456789012345, 567890123456]
+    },
+    {
+      "name": "timestamp_micros_field",
+      "schemaType": "required",
+      "physicalType": "INT64",
+      "logicalType": "TIMESTAMP_MICROS",
+      "data": [1609459200000000, 1609545600000000, 1609632000000000, 1609718400000000, 1609804800000000]
+    },
+    {
+      "name": "timestamp_millis_field",
+      "schemaType": "required",
+      "physicalType": "INT64",
+      "logicalType": "TIMESTAMP_MILLIS",
+      "data": [1609459200000, 1609545600000, 1609632000000, 1609718400000, 1609804800000]
+    }
+  ]
+}
