@@ -31,7 +31,12 @@
 - 💾 [Installation](#-installation) 
 - 🚀 [Creating Parquet File](#-creating-parquet-file)
 - 📐 [JSON Schema](#-json-schema)
-- 📘 [JSON File Definition](#-parquet-file-schema-documentation)
+- 📘 [Parquet File Schema Documentation](#-parquet-file-schema-documentation)
+  - [Overview](#overview)
+  - [Fields](#fields)
+    - [1. File Definition](#1-file-definition)
+    - [2. Writer Options](#2-writer-options)
+    - [3. Schema Definition](#3-schema-definition)
 - 🚧 [Missing Functionality](#-missing-functionality)
 - 📚 [Full documentation](#-full-documentation)
 
@@ -83,17 +88,17 @@ parquetify -j example.json -o /path/to/output/file.parquet
 
 ---
 
-# 📐 Parquet File Schema Documentation
+# 📐 [Parquet File Schema Documentation](#-table-of-contents)
 
 This document provides guidelines for defining the structure and properties of a Parquet file using a JSON schema. This schema aligns with Parquet-Java API terms, supporting complex types, including nested values in MAP structures.
 
-## Overview
+## [Overview](#-table-of-contents)
 
 - **Schema Version**: Draft-07 JSON Schema
 - **Title**: Parquet File Schema
 - **Description**: Defines Parquet file configuration with options for file metadata, writer settings, and column definitions.
 
-## Fields
+## [Fields](#-table-of-contents)
 
 ### 1. File Definition
 
