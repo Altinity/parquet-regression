@@ -1,5 +1,5 @@
 {
-  "fileName": "integer_examples.parquet",
+  "fileName": "unsigned_integer_examples.parquet",
   "options": {
     "writerVersion": "1.0",
     "compression": "GZIP",
