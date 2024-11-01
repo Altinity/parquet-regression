@@ -35,7 +35,7 @@
    - [Regular Types](#regular-types)
    - [Nested Types](#nested-types)
 - 🚧 [Missing Functionality](#-missing-functionality)
-- Full documentation
+- 📚 [Full documentation](#-full-documentation)
 
 ---
 
@@ -220,7 +220,7 @@ If a column has a MAP type, key and value schemas are specified separately.
 - [Data insertion into `FLOAT16` columns](https://github.com/Altinity/parquet-regression/issues/3) (planned for next release)
 - [Parquet encryption](https://github.com/Altinity/parquet-regression/issues/4)
 
-# Full documentation
+# 📚 Full documentation
 
 🔍 See [wiki](https://github.com/Altinity/parquet-regression/wiki) for the full documentation. 
 
