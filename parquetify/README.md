@@ -180,7 +180,7 @@ If a column has a MAP type, key and value schemas are specified separately.
   - **`logicalType`** (string): Options include `"UTF8"`, `"DECIMAL"`, `"NONE"`.
   - **`fields`** (array of objects): Additional fields if `valueType` is a complex type, such as `GROUP` or nested `MAP`.
 
-### Example Usage
+### [Example Usage](#-table-of-contents)
 
 ```json
 {
@@ -222,7 +222,7 @@ If a column has a MAP type, key and value schemas are specified separately.
 - [Data insertion into `FLOAT16` columns](https://github.com/Altinity/parquet-regression/issues/3) (planned for next release)
 - [Parquet encryption](https://github.com/Altinity/parquet-regression/issues/4)
 
-# 📚 Full documentation
+# 📚 [Full documentation](#-table-of-contents)
 
 🔍 See [wiki](https://github.com/Altinity/parquet-regression/wiki) for the full documentation. 
 
