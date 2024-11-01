@@ -31,9 +31,7 @@
 - 💾 [Installation](#-installation) 
 - 🚀 [Creating Parquet File](#-creating-parquet-file)
 - 📐 [JSON Schema](#-json-schema)
-- 📘 [JSON File Definition](#-json-file-definition)
-   - [Regular Types](#regular-types)
-   - [Nested Types](#nested-types)
+- 📘 [JSON File Definition](#-parquet-file-schema-documentation)
 - 🚧 [Missing Functionality](#-missing-functionality)
 - 📚 [Full documentation](#-full-documentation)
 
