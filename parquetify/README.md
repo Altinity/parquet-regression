@@ -13,16 +13,16 @@
 
 # 🌟 Features
 
-| Feature | Description |
-|---|---|
-| **Physical Data Types:** | All physical data types: `INT32`, `INT64`, `BOOLEAN`, `FLOAT`, `DOUBLE`, `BINARY`, `FIXED_LEN_BYTE_ARRAY`. |
-| **Logical Data Types:** | Most logical types (except for `FLOAT16`): `UTF8`, `DECIMAL`, `DATE`, `TIME_MILLIS`, `TIME_MICROS`, `TIMESTAMP_MILLIS`, `TIMESTAMP_MICROS`, `ENUM`, `NONE`, `MAP`, `LIST`, `STRING`, `MAP_KEY_VALUE`, `TIME`, `INTEGER`, `JSON`, `BSON`, `UUID`, `INTERVAL`, `UINT_8`, `UINT_16`, `UINT_32`, `UINT_64`, `INT_8`, `INT_16`, `INT_32`, `INT_64` |
-| **Precision & Scale:** | Precision and scale for `DECIMAL` types. |
-| **Compression:** | `NONE`, `SNAPPY`, `GZIP`, `LZO`, `BROTLI`, `LZ4`, `ZSTD`. |
-| **Encodings:** | Automatically set by the writer for a given column. |
-| **Bloom Filter:** | Apply a bloom filter to specific columns or all columns (including those within groups). |
-| **Writer Version:** | Specify writer version (`1.0`, `2.0`). |
-| **Customizable Sizes:** | Row group and page sizes. |
+| Feature                  | Description                                                                                                                                                                                                                                                                                                                                   |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Physical Data Types:** | All physical data types: `INT32`, `INT64`, `BOOLEAN`, `FLOAT`, `DOUBLE`, `BINARY`, `FIXED_LEN_BYTE_ARRAY`.                                                                                                                                                                                                                                    |
+| **Logical Data Types:**  | Most logical types (except for `FLOAT16`): `UTF8`, `DECIMAL`, `DATE`, `TIME_MILLIS`, `TIME_MICROS`, `TIMESTAMP_MILLIS`, `TIMESTAMP_MICROS`, `ENUM`, `NONE`, `MAP`, `LIST`, `STRING`, `MAP_KEY_VALUE`, `TIME`, `INTEGER`, `JSON`, `BSON`, `UUID`, `INTERVAL`, `UINT_8`, `UINT_16`, `UINT_32`, `UINT_64`, `INT_8`, `INT_16`, `INT_32`, `INT_64` |
+| **Precision & Scale:**   | Precision and scale for `DECIMAL` types.                                                                                                                                                                                                                                                                                                      |
+| **Compression:**         | `NONE`, `SNAPPY`, `GZIP`, `LZO`, `BROTLI`, `LZ4`, `ZSTD`.                                                                                                                                                                                                                                                                                     |
+| **Encodings:**           | Automatically set by the writer for a given column.                                                                                                                                                                                                                                                                                           |
+| **Bloom Filter:**        | Apply a bloom filter to specific columns or all columns (including those within groups).                                                                                                                                                                                                                                                      |
+| **Writer Version:**      | Specify writer version (`1.0`, `2.0`).                                                                                                                                                                                                                                                                                                        |
+| **Customizable Sizes:**  | Row group and page sizes.                                                                                                                                                                                                                                                                                                                     |
 
 ---
 
@@ -30,13 +30,12 @@
 
 - 💾 [Installation](#-installation) 
 - 🚀 [Creating Parquet File](#-creating-parquet-file)
-- 📐 [JSON Schema](#-json-schema)
 - 📘 [Parquet File Schema Documentation](#-parquet-file-schema-documentation)
-  - [Overview](#overview)
-  - [Fields](#fields)
-    - [1. File Definition](#1-file-definition)
-    - [2. Writer Options](#2-writer-options)
-    - [3. Schema Definition](#3-schema-definition)
+  - 📖 [Overview](#overview)
+  - 📋 [Fields](#fields)
+    - 📁 [File Definition](#1-file-definition)
+    - ✍️ [Writer Options](#2-writer-options)
+    - 📐 [Schema Definition](#3-schema-definition)
 - 🚧 [Missing Functionality](#-missing-functionality)
 - 📚 [Full documentation](#-full-documentation)
 
