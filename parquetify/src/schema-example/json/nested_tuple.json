@@ -1,5 +1,5 @@
 {
-  "fileName": "nested_array_examples.parquet",
+  "fileName": "nested_tuple_examples.parquet",
   "options": {
     "writerVersion": "1.0",
     "compression": "GZIP",
@@ -9,12 +9,12 @@
   "schema": [
     {
       "name": "attributes",
-      "schemaType": "repeatedGroup",
+      "schemaType": "optionalGroup",
       "logicalType": "INT32",
       "fields": [
         {
           "name": "key_value",
-          "schemaType": "repeatedGroup",
+          "schemaType": "requiredGroup",
           "fields": [
             {
               "name": "key",
