@@ -28,6 +28,7 @@
 
 # 📝 Table of Contents
 
+- 📚 [Full documentation](#-full-documentation)
 - 💾 [Installation](#-installation) 
 - 🚀 [Creating Parquet File](#-creating-parquet-file)
 - 📘 [Parquet File Schema Documentation](#-parquet-file-schema-documentation)
@@ -37,9 +38,13 @@
     - ✍️ [Writer Options](#2-writer-options)
     - 📐 [Schema Definition](#3-schema-definition)
 - 🚧 [Missing Functionality](#-missing-functionality)
-- 📚 [Full documentation](#-full-documentation)
+
 
 ---
+
+# 📚 [Full documentation](#-table-of-contents)
+
+🔍 See [wiki](https://github.com/Altinity/parquet-regression/wiki) for the full documentation. 
 
 # 💾 [Installation](#-table-of-contents)
 
@@ -221,46 +226,3 @@ If a column has a MAP type, key and value schemas are specified separately.
 - [Specifying encodings](https://github.com/Altinity/parquet-regression/issues/2)
 - [Data insertion into `FLOAT16` columns](https://github.com/Altinity/parquet-regression/issues/3) (planned for next release)
 - [Parquet encryption](https://github.com/Altinity/parquet-regression/issues/4)
-
-# 📚 [Full documentation](#-table-of-contents)
-
-🔍 See [wiki](https://github.com/Altinity/parquet-regression/wiki) for the full documentation. 
-
-* [Parquet File Name](https://github.com/Altinity/parquet-regression/wiki#parquet-file-name)
-* [Options](https://github.com/Altinity/parquet-regression/wiki#options)
-  * [Usage and Examples](https://github.com/Altinity/parquet-regression/wiki#usage-and-examples)
-    *  [Writer Version](https://github.com/Altinity/parquet-regression/wiki#writer-version)
-      * [Writer Version 1.0](https://github.com/Altinity/parquet-regression/wiki#writer-version-10)
-      * [Writer Version 2.0](https://github.com/Altinity/parquet-regression/wiki#writer-version-20)
-    *  [Compression](https://github.com/Altinity/parquet-regression/wiki#compression)
-    *  [Row Group Size and Page size](https://github.com/Altinity/parquet-regression/wiki#row-group-size-and-page-size)
-    *  [Bloom Filter](https://github.com/Altinity/parquet-regression/wiki#bloom-filter)
-      *  [All Columns](https://github.com/Altinity/parquet-regression/wiki#all-columns)
-      *  [Specific Columns](https://github.com/Altinity/parquet-regression/wiki#specific-columns)
-* [Data Types](https://github.com/Altinity/parquet-regression/wiki#data-types)
-  * [Regular Types](https://github.com/Altinity/parquet-regression/wiki#regular-types)
-    * [Int8](https://github.com/Altinity/parquet-regression/wiki#int8)
-    * [Int16](https://github.com/Altinity/parquet-regression/wiki#int16)
-    * [Int32](https://github.com/Altinity/parquet-regression/wiki#int32)
-    * [UInt8](https://github.com/Altinity/parquet-regression/wiki#uint8)
-    * [UInt16](https://github.com/Altinity/parquet-regression/wiki#uint16)
-    * [UInt32](https://github.com/Altinity/parquet-regression/wiki#uint32)
-    * [UInt64](https://github.com/Altinity/parquet-regression/wiki#uint64)
-    * [UTF8](https://github.com/Altinity/parquet-regression/wiki#utf8)
-    * [Decimal That Fits Into INT32 Physical Type](https://github.com/Altinity/parquet-regression/wiki#decimal-that-fits-into-int32-physical-type)
-    * [Large Decimal That Doesn't Fit Into INT32 Physical Type](https://github.com/Altinity/parquet-regression/wiki#large-decimal-that-doesnt-fit-into-int32-physical-type)
-    * [Decimal Annotated To BINARY](https://github.com/Altinity/parquet-regression/wiki#decimal-annotated-to-binary)
-    * [DATE](https://github.com/Altinity/parquet-regression/wiki#date)
-    * [TIME_MILLIS](https://github.com/Altinity/parquet-regression/wiki#time_millis)
-    * [TIME_MICROS](https://github.com/Altinity/parquet-regression/wiki#time_micros)
-    * [TIMESTAMP_MICROS](https://github.com/Altinity/parquet-regression/wiki#timestamp_micros)
-    * [TIMESTAMP_MILLIS](https://github.com/Altinity/parquet-regression/wiki#timestamp_millis)
-    * [JSON and BSON](https://github.com/Altinity/parquet-regression/wiki#json-and-bson)
-    * [STRING](https://github.com/Altinity/parquet-regression/wiki#string)
-    * [ENUM](https://github.com/Altinity/parquet-regression/wiki#enum)
-    * [UUID](https://github.com/Altinity/parquet-regression/wiki#uuid)
-  * [Complex Types](https://github.com/Altinity/parquet-regression/wiki#complex-types)
-    * [Array](https://github.com/Altinity/parquet-regression/wiki#array)
-    * [Nested Array](https://github.com/Altinity/parquet-regression/wiki#nested-array)
-    * [Tuple](https://github.com/Altinity/parquet-regression/wiki#tuple)
-    * [Nested Tuple](https://github.com/Altinity/parquet-regression/wiki#nested-tuple)
