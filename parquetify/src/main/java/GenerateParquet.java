@@ -91,9 +91,13 @@ public class GenerateParquet {
         Path path = new Path(filePath);
         String compressionCodec = options.optString("compression", "SNAPPY").toUpperCase();
         String writerVersion = options.optString("writerVersion", "1.0");
-        int rowGroupSize = options.optInt("rowGroupSize", 128 * 1024 * 1024);
+        long rowGroupSize = options.optInt("rowGroupSize", 128 * 1024 * 1024);
         int pageSize = options.optInt("pageSize", 1024 * 1024);
         JSONArray encodings = options.optJSONArray("encodings");
+        if (encodings == null) {
+            encodings = new JSONArray();
+            encodings.put("PLAIN");
+        }
         String bloomFilterOption = options.optString("bloomFilter", "none");
 
         ExampleParquetWriter.Builder builder = ExampleParquetWriter.builder(HadoopOutputFile.fromPath(path, conf))
