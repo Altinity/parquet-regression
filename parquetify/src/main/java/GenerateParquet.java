@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class GenerateParquet {
 
@@ -70,6 +71,20 @@ public class GenerateParquet {
             Configuration conf = new Configuration();
             GroupWriteSupport.setSchema(schema, conf);
             SimpleGroupFactory groupFactory = new SimpleGroupFactory(schema);
+
+            // Set Hadoop configurations from JSON
+            if (configJson.has("hadoopConfigs")) {
+                JSONObject hadoopConfigs = configJson.getJSONObject("hadoopConfigs");
+                for (String key : hadoopConfigs.keySet()) {
+                    conf.set(key, hadoopConfigs.getString(key));
+                }
+                // Print all Hadoop configuration values and keys
+                System.out.println("Hadoop configurations:");
+                for (String key : hadoopConfigs.keySet()) {
+                    System.out.println("    " + key + ": " + hadoopConfigs.getString(key));
+                }
+            }
+
             writer = createParquetWriter(filePath, conf, configJson.getJSONObject("options"));
             writeData(writer, groupFactory, configJson.getJSONArray("schema"));
         } catch (IOException e) {
@@ -335,13 +350,14 @@ public class GenerateParquet {
 
     private static void writeData(ParquetWriter<Group> writer, SimpleGroupFactory groupFactory, JSONArray schemaArray) throws IOException {
         int numRows = calculateNumRows(schemaArray);
-        System.out.println("Number of rows to write: " + numRows); // Logging number of rows to write
+        System.out.println("Number of rows to write: " + numRows);
         for (int i = 0; i < numRows; i++) {
             Group group = groupFactory.newGroup();
             insertDataIntoGroup(group, schemaArray, i);
-            System.out.println("Writing row " + (i + 1)); // Logging each row being written
             writer.write(group);
         }
+        System.out.println("Data written successfully");
+
     }
 
     private static int calculateNumRows(JSONArray schemaArray) {
