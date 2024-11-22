@@ -73,8 +73,8 @@ public class GenerateParquet {
             SimpleGroupFactory groupFactory = new SimpleGroupFactory(schema);
 
             // Set Hadoop configurations from JSON
-            if (configJson.has("hadoopConfigs")) {
-                JSONObject hadoopConfigs = configJson.getJSONObject("hadoopConfigs");
+            if (configJson.has("hadoop")) {
+                JSONObject hadoopConfigs = configJson.getJSONObject("hadoop").getJSONObject("options");
                 for (String key : hadoopConfigs.keySet()) {
                     conf.set(key, hadoopConfigs.getString(key));
                 }
