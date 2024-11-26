@@ -5,8 +5,8 @@
     "compression": "snappy",
     "rowGroupSize": "default",
     "pageSize": "default",
-    "encodings": ["PLAIN"],
-    "bloomFilter": "all"
+    "bloomFilter": "all",
+    "dictionary": "enabled"
 },
   "schema": [
     {
