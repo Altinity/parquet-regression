@@ -400,6 +400,21 @@ public class GenerateParquet {
                         isUUID = true;
                     }
 
+                    if ("FLOAT16".equalsIgnoreCase(fieldLogicalType)) {
+                        if (nestedValue instanceof Number) {
+                            float floatValue = ((Number) nestedValue).floatValue();
+                            int intBits = Float.floatToIntBits(floatValue);
+                            short shortBits = (short) (intBits >> 16);
+                            byte[] float16Bytes = new byte[2];
+                            float16Bytes[0] = (byte) (shortBits >> 8);
+                            float16Bytes[1] = (byte) shortBits;
+                            nestedValue = float16Bytes;
+                        } else {
+                            throw new IllegalArgumentException(
+                                    "Invalid value type for FLOAT16 logical type: " + nestedValue.getClass().getName());
+                        }
+                    }
+
                     appendValueToGroup(nestedGroup, nestedFieldName, nestedValue, isUUID);
                 }
             } else {
@@ -414,6 +429,21 @@ public class GenerateParquet {
 
                 if ((fieldLogicalType).equalsIgnoreCase("uuid")) {
                     isUUID = true;
+                }
+
+                if ("FLOAT16".equalsIgnoreCase(fieldLogicalType)) {
+                    if (value instanceof Number) {
+                        float floatValue = ((Number) value).floatValue();
+                        int intBits = Float.floatToIntBits(floatValue);
+                        short shortBits = (short) (intBits >> 16);
+                        byte[] float16Bytes = new byte[2];
+                        float16Bytes[0] = (byte) (shortBits >> 8);
+                        float16Bytes[1] = (byte) shortBits;
+                        value = float16Bytes;
+                    } else {
+                        throw new IllegalArgumentException(
+                                "Invalid value type for FLOAT16 logical type: " + value.getClass().getName());
+                    }
                 }
 
                 appendValueToGroup(group, name, value, isUUID);
