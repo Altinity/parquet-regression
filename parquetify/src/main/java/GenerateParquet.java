@@ -401,18 +401,7 @@ public class GenerateParquet {
                     }
 
                     if ("FLOAT16".equalsIgnoreCase(fieldLogicalType)) {
-                        if (nestedValue instanceof Number) {
-                            float floatValue = ((Number) nestedValue).floatValue();
-                            int intBits = Float.floatToIntBits(floatValue);
-                            short shortBits = (short) (intBits >> 16);
-                            byte[] float16Bytes = new byte[2];
-                            float16Bytes[0] = (byte) (shortBits >> 8);
-                            float16Bytes[1] = (byte) shortBits;
-                            nestedValue = float16Bytes;
-                        } else {
-                            throw new IllegalArgumentException(
-                                    "Invalid value type for FLOAT16 logical type: " + nestedValue.getClass().getName());
-                        }
+                        nestedValue = encodeFloat16ToBytes(nestedValue);
                     }
 
                     appendValueToGroup(nestedGroup, nestedFieldName, nestedValue, isUUID);
@@ -432,18 +421,7 @@ public class GenerateParquet {
                 }
 
                 if ("FLOAT16".equalsIgnoreCase(fieldLogicalType)) {
-                    if (value instanceof Number) {
-                        float floatValue = ((Number) value).floatValue();
-                        int intBits = Float.floatToIntBits(floatValue);
-                        short shortBits = (short) (intBits >> 16);
-                        byte[] float16Bytes = new byte[2];
-                        float16Bytes[0] = (byte) (shortBits >> 8);
-                        float16Bytes[1] = (byte) shortBits;
-                        value = float16Bytes;
-                    } else {
-                        throw new IllegalArgumentException(
-                                "Invalid value type for FLOAT16 logical type: " + value.getClass().getName());
-                    }
+                    value = encodeFloat16ToBytes(value);
                 }
 
                 appendValueToGroup(group, name, value, isUUID);
@@ -451,6 +429,52 @@ public class GenerateParquet {
         }
     }
 
+    public static int encodeFloat16ToInt(float floatValue) {
+        // This function is in the public domain
+        // https://stackoverflow.com/a/6162687
+
+        int floatBits = Float.floatToIntBits(floatValue);
+        int sign = floatBits >>> 16 & 0x8000; // sign only
+        int val = (floatBits & 0x7fffffff) + 0x1000; // rounded value
+
+        if (val >= 0x47800000) // might be or become NaN/Inf
+        { // avoid Inf due to rounding
+            if ((floatBits & 0x7fffffff) >= 0x47800000) { // is or must become NaN/Inf
+                if (val < 0x7f800000) // was value but too large
+                    return sign | 0x7c00; // make it +/-Inf
+                return sign | 0x7c00 | // remains +/-Inf or NaN
+                        (floatBits & 0x007fffff) >>> 13; // keep NaN (and Inf) bits
+            }
+            return sign | 0x7bff; // unrounded not quite Inf
+        }
+        if (val >= 0x38800000) // remains normalized value
+            return sign | val - 0x38000000 >>> 13; // exp - 127 + 15
+        if (val < 0x33000000) // too small for subnormal
+            return sign; // becomes +/-0
+        val = (floatBits & 0x7fffffff) >>> 23; // tmp exp for subnormal calc
+        return sign | ((floatBits & 0x7fffff | 0x800000) // add subnormal bit
+                + (0x800000 >>> val - 102) // round depending on cut off
+                >>> 126 - val); // div by 2^(1-(exp-127+15)) and >> 13 | exp=0
+    }
+
+    public static byte[] encodeFloat16ToBytes(Float floatValue) {
+        int floatValueAsInt = encodeFloat16ToInt(floatValue);
+
+        byte[] float16Bytes = new byte[2];
+        float16Bytes[1] = (byte) (floatValueAsInt >> 8);
+        float16Bytes[0] = (byte) floatValueAsInt;
+        return float16Bytes;
+    }
+
+    public static byte[] encodeFloat16ToBytes(Object value) {
+        if (!(value instanceof Number)) {
+            throw new IllegalArgumentException(
+                    "Invalid value type for FLOAT16 logical type: " + value.getClass().getName());
+        }
+
+        float floatValue = ((Number) value).floatValue();
+        return encodeFloat16ToBytes(floatValue);
+    }
 
     private static void appendValueToGroup(Group group, String name, Object value, Boolean isUUID) {
         try {
