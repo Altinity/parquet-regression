@@ -374,9 +374,9 @@ public class GenerateParquet {
                 columnBuilder.as(LogicalTypeAnnotation.intervalType());
                 break;
             case "FLOAT16":
-//                if (!physicalType.equals("FIXED_LEN_BYTE_ARRAY") || length != 2) {
-//                    throw new IllegalArgumentException("FLOAT16 can only annotate FIXED_LEN_BYTE_ARRAY with length 2");
-//                }
+                if (!physicalType.equals("FIXED_LEN_BYTE_ARRAY") || length != 2) {
+                    throw new IllegalArgumentException("FLOAT16 can only annotate FIXED_LEN_BYTE_ARRAY with length 2");
+                }
                 columnBuilder.as(LogicalTypeAnnotation.float16Type());
                 break;
             case "JSON":
