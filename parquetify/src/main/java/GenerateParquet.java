@@ -2,12 +2,15 @@ import org.apache.commons.cli.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.column.ParquetProperties;
+import org.apache.parquet.crypto.ColumnEncryptionProperties;
+import org.apache.parquet.crypto.FileEncryptionProperties;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroupFactory;
 import org.apache.parquet.hadoop.ParquetFileWriter;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.example.ExampleParquetWriter;
 import org.apache.parquet.hadoop.example.GroupWriteSupport;
+import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.apache.parquet.hadoop.util.HadoopOutputFile;
 import org.apache.parquet.io.api.Binary;
@@ -20,8 +23,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GenerateParquet {
@@ -126,6 +131,43 @@ public class GenerateParquet {
 
         configureEncodings(builder, encodings);
         configureBloomFilters(builder, bloomFilterOption, options);
+
+        if (options.has("encryption")) {
+            JSONObject encryptionOptions = options.getJSONObject("encryption");
+            byte[] footerKey = encryptionOptions.getString("footerKey").getBytes(StandardCharsets.UTF_8);
+            FileEncryptionProperties.Builder encryptionBuilder = FileEncryptionProperties.builder(footerKey);
+
+            if (encryptionOptions.has("aadPrefix")) {
+                byte[] aadPrefix = encryptionOptions.getString("aadPrefix").getBytes(StandardCharsets.UTF_8);
+                encryptionBuilder.withAADPrefix(aadPrefix);
+            }
+
+            if (encryptionOptions.has("storeAadPrefixInFile")) {
+                boolean storeAadPrefixInFile = encryptionOptions.getBoolean("storeAadPrefixInFile");
+                if (!storeAadPrefixInFile) {
+                    encryptionBuilder.withoutAADPrefixStorage();
+                }
+            }
+
+            if (encryptionOptions.has("footerKeyMetadata")) {
+                byte[] footerKeyMetadata = encryptionOptions.getString("footerKeyMetadata").getBytes(StandardCharsets.UTF_8);
+                encryptionBuilder.withFooterKeyMetadata(footerKeyMetadata);
+            }
+
+            if (encryptionOptions.has("encryptedColumns")) {
+                Map<ColumnPath, ColumnEncryptionProperties> encryptedColumns = new HashMap<>();
+                JSONArray columnsArray = encryptionOptions.getJSONArray("encryptedColumns");
+                for (int i = 0; i < columnsArray.length(); i++) {
+                    JSONObject column = columnsArray.getJSONObject(i);
+                    ColumnPath columnPath = ColumnPath.get(column.getString("path"));
+                    ColumnEncryptionProperties columnProperties = ColumnEncryptionProperties.builder(columnPath, true).build();
+                    encryptedColumns.put(columnPath, columnProperties);
+                }
+                encryptionBuilder.withEncryptedColumns(encryptedColumns);
+            }
+
+            builder.withEncryption(encryptionBuilder.build());
+        }
 
         return builder.build();
     }
@@ -332,9 +374,9 @@ public class GenerateParquet {
                 columnBuilder.as(LogicalTypeAnnotation.intervalType());
                 break;
             case "FLOAT16":
-                if (!physicalType.equals("FIXED_LEN_BYTE_ARRAY") || length != 2) {
-                    throw new IllegalArgumentException("FLOAT16 can only annotate FIXED_LEN_BYTE_ARRAY with length 2");
-                }
+//                if (!physicalType.equals("FIXED_LEN_BYTE_ARRAY") || length != 2) {
+//                    throw new IllegalArgumentException("FLOAT16 can only annotate FIXED_LEN_BYTE_ARRAY with length 2");
+//                }
                 columnBuilder.as(LogicalTypeAnnotation.float16Type());
                 break;
             case "JSON":
