@@ -16,6 +16,7 @@ from tests.helpers.parquetify import build
 @Name("regression")
 def regression(self):
     """Test module for the parquetify regression tests."""
+    self.context.test_dir = current_dir()
     build()
 
 
