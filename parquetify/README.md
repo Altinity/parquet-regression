@@ -220,9 +220,3 @@ If a column has a MAP type, key and value schemas are specified separately.
 }
 ```
 ---
-
-# 🚧 [Missing Functionality](#-table-of-contents)
-
-- [Specifying encodings](https://github.com/Altinity/parquet-regression/issues/2)
-- [Data insertion into `FLOAT16` columns](https://github.com/Altinity/parquet-regression/issues/3) (planned for next release)
-- [Parquet encryption](https://github.com/Altinity/parquet-regression/issues/4)
