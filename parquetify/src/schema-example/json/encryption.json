@@ -1,0 +1,41 @@
+{
+  "fileName": "encrypted_example.parquet",
+  "schema": [
+    {
+      "name": "id",
+      "schemaType": "required",
+      "physicalType": "INT64",
+      "logicalType": "NONE",
+      "data": [1, 2, 3]
+    },
+    {
+      "name": "name",
+      "schemaType": "required",
+      "physicalType": "BINARY",
+      "logicalType": "STRING",
+      "data": ["Alice", "Bob", "Charlie"]
+    }
+  ],
+  "options": {
+    "compression": "SNAPPY",
+    "writerVersion": "1.0",
+    "rowGroupSize": 134217728,
+    "pageSize": 1048576,
+    "encodings": ["PLAIN"],
+    "bloomFilter": "none",
+    "encryption": {
+      "footerKey": "1234567890123456",
+      "aadPrefix": "key",
+      "storeAadPrefixInFile": true,
+      "footerKeyMetadata": "something",
+      "encryptedColumns": [
+        {
+          "path": "id"
+        },
+        {
+          "path": "name"
+        }
+      ]
+    }
+  }
+}
