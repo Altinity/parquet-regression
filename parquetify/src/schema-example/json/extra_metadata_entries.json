@@ -1,0 +1,30 @@
+{
+  "fileName": "example_with_extra_metadata.parquet",
+  "options": {
+    "writerVersion": "1.0",
+    "compression": "SNAPPY",
+    "rowGroupSize": 128,
+    "pageSize": 1024,
+    "extraMetaData": {
+      "author": "John Doe",
+      "description": "Sample Parquet file with extra metadata",
+      "createdDate": "2021-01-01"
+    }
+  },
+  "schema": [
+    {
+      "name": "id",
+      "schemaType": "required",
+      "physicalType": "INT32",
+      "logicalType": "INT8",
+      "data": [1, 2, 3, 4, 5]
+    },
+    {
+      "name": "name",
+      "schemaType": "optional",
+      "physicalType": "BINARY",
+      "logicalType": "STRING",
+      "data": ["Alice", "Bob", "Charlie", "David", "Eve"]
+    }
+  ]
+}
