@@ -132,6 +132,15 @@ public class GenerateParquet {
         configureEncodings(builder, encodings);
         configureBloomFilters(builder, bloomFilterOption, options);
 
+        if (options.has("extraMetaData")) {
+            JSONObject extraMetaDataJson = options.getJSONObject("extraMetaData");
+            Map<String, String> extraMetaData = new HashMap<>();
+            for (String key : extraMetaDataJson.keySet()) {
+                extraMetaData.put(key, extraMetaDataJson.getString(key));
+            }
+            builder.withExtraMetaData(extraMetaData);
+        }
+
         if (options.has("encryption")) {
             JSONObject encryptionOptions = options.getJSONObject("encryption");
             byte[] footerKey = encryptionOptions.getString("footerKey").getBytes(StandardCharsets.UTF_8);
